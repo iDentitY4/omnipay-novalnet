@@ -367,7 +367,15 @@ class PurchaseRequest extends AbstractRequest
             return 'Error: func n/a';
         }
 
-        return md5($h['auth_code'] . $h['product_id'] . $h['tariff'] . $h['amount'] . $h['test_mode'] . $h['uniqid'] . strrev($key));
+        return md5(
+            $h['auth_code'] .
+            $h['product_id'] .
+            $h['tariff'] .
+            $h['amount'] .
+            $h['test_mode'] .
+            $h['uniqid'] .
+            strrev($key)
+        );
     }
 
     protected function encodeParams($auth_code, $product_id, $tariff_id, $amount, $test_mode, $uniqid, $password)
@@ -379,7 +387,12 @@ class PurchaseRequest extends AbstractRequest
         $test_mode = self::encode($test_mode, $password);
         $uniqid = self::encode($uniqid, $password);
         $hash = self::hash1(array(
-            'auth_code' => $auth_code, 'product_id' => $product_id, 'tariff' => $tariff_id, 'amount' => $amount, 'test_mode' => $test_mode, 'uniqid' => $uniqid
+            'auth_code' => $auth_code,
+            'product_id' => $product_id,
+            'tariff' => $tariff_id,
+            'amount' => $amount,
+            'test_mode' => $test_mode,
+            'uniqid' => $uniqid
         ), $password);
         return array($auth_code, $product_id, $tariff_id, $amount, $test_mode, $uniqid, $hash);
     }

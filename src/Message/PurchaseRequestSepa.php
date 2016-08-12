@@ -41,7 +41,7 @@ class PurchaseRequestSepa extends PurchaseRequest
         // build xml
         $xml = new SimpleXMLElement('<nnxml></nnxml>');
         $subElement = $xml->addChild('transaction');
-        $this->array_to_xml($data, $subElement);
+        $this->arrayToXml($data, $subElement);
 
         // send request
         $httpResponse = $this->httpClient->post($this->endpoint, null, $xml->asXML())->send();
@@ -55,16 +55,16 @@ class PurchaseRequestSepa extends PurchaseRequest
         return false;
     }
 
-    private function array_to_xml($array, &$xml_user_info)
+    private function arrayToXml($array, &$xml_user_info)
     {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 if (!is_numeric($key)) {
                     $subnode = $xml_user_info->addChild("$key");
-                    $this->array_to_xml($value, $subnode);
+                    $this->arrayToXml($value, $subnode);
                 } else {
                     $subnode = $xml_user_info->addChild("item$key");
-                    $this->array_to_xml($value, $subnode);
+                    $this->arrayToXml($value, $subnode);
                 }
             } else {
                 $xml_user_info->addChild("$key", htmlspecialchars("$value"));
