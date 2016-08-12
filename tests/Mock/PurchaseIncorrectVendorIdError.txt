@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Date: Thu, 11 Aug 2016 12:03:35 GMT
+Server: Apache/2.2.31 (Linux/SUSE)
+Transfer-Encoding: chunked
+Content-Type: text/xml
+
+<nnxml>
+  <transaction_response>
+    <test_mode>1</test_mode>
+    <tid>13380300008513001</tid>
+    <amount>0</amount>
+    <status>0300041</status>
+    <status_message>incorrect affiliate ID</status_message>
+  </transaction_response>
+</nnxml>

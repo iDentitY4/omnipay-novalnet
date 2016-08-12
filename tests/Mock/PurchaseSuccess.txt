@@ -1,0 +1,17 @@
+HTTP/1.1 200 OK
+Date: Thu, 11 Aug 2016 11:39:41 GMT
+Server: Apache/2.2.31 (Linux/SUSE)
+Transfer-Encoding: chunked
+Content-Type: text/xml
+
+<nnxml>
+  <transaction_response>
+    <test_mode>1</test_mode>
+    <tid>13380300007802363</tid>
+    <amount>522</amount>
+    <status>100</status>
+    <status_message>successful</status_message>
+    <customer_no>2200454790542164</customer_no>
+    <payment_details_ref>1764589</payment_details_ref>
+  </transaction_response>
+</nnxml>
