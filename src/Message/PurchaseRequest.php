@@ -27,7 +27,6 @@ class PurchaseRequest extends AbstractRequest
             'currency',
             'transactionId',
             'paymentMethod',
-
             // customer
             'card'
         );
@@ -96,7 +95,7 @@ class PurchaseRequest extends AbstractRequest
                 'vendor' => $this->getVendorId(),
 //                'hash' => $this->getPaymentKey(),
             ]);
-        } elseif($this->shouldRedirect() && !$this->shouldEncode()) {
+        } elseif ($this->shouldRedirect() && !$this->shouldEncode()) {
             $data = array_merge($data, [
                 'vendor' => $this->getVendorId(),
             ], $dataToEncode);
@@ -376,8 +375,9 @@ class PurchaseRequest extends AbstractRequest
         $auth_code = self::encode($auth_code, $password);
         $product_id = self::encode($product_id, $password);
         $tariff_id = self::encode($tariff_id, $password);
-        $amount = self::encode($amount,$password);
-        $test_mode = self::encode($test_mode,$password); $uniqid = self::encode($uniqid,$password);
+        $amount = self::encode($amount, $password);
+        $test_mode = self::encode($test_mode, $password);
+        $uniqid = self::encode($uniqid, $password);
         $hash = self::hash1(array(
             'auth_code' => $auth_code, 'product_id' => $product_id, 'tariff' => $tariff_id, 'amount' => $amount, 'test_mode' => $test_mode, 'uniqid' => $uniqid
         ), $password);
