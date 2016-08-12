@@ -1,0 +1,38 @@
+{
+  "name": "fruitcake/omnipay-novalnet",
+  "description": "Novalnet gateway for the Omnipay payment processing library",
+  "keywords": [
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "sepa",
+    "creditcard",
+    "payment",
+    "novalnet"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fruitcake",
+      "homepage": "https://fruitcake.nl"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\Novalnet\\": "src/",
+      "Omnipay\\Novalnet\\Tests\\" : "tests/"
+    }
+  },
+  "require": {
+    "omnipay/common": "~2.2"
+  },
+  "require-dev": {
+    "omnipay/tests": "~2.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
+}
