@@ -28,7 +28,7 @@ The following gateways are provided by this package:
 For general usage instructions, please see the main [Omnipay](https://github.com/omnipay/omnipay)
 repository. You can also check out to the documentation provided by Novalnet.
 
-For common but obscure errors check out these [errors](https://github.com/fruitcakestudio/omnipay-novalnet/). If you find more errors like these, please create a PR to help the others out.
+For common but obscure errors check out these [errors](errors.md). If you find more errors like these, please create a PR to help the others out.
 
 
 ## Example 1 - I will figure it out
