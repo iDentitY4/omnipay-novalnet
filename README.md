@@ -2,9 +2,9 @@
 
 **Novalnet gateway for the Omnipay PHP payment processing library**
 
-[![Build Status](https://travis-ci.org/fruitcakestudio/omnipay-novalnet.png?branch=master)](https://travis-ci.org/fruitcakestudio/omnipay-sisow)
-[![Latest Stable Version](https://poser.pugx.org/fruitcakestudio/omnipay-novalnet/version.png)](https://packagist.org/packages/fruitcakestudio/omnipay-sisow)
-[![Total Downloads](https://poser.pugx.org/fruitcakestudio/omnipay-novalnet/d/total.png)](https://packagist.org/packages/fruitcakestudio/omnipay-sisow)
+[![Build Status](https://travis-ci.org/fruitcake/omnipay-novalnet.png?branch=master)](https://travis-ci.org/fruitcake/omnipay-sisow)
+[![Latest Stable Version](https://poser.pugx.org/fruitcake/omnipay-novalnet/version.png)](https://packagist.org/packages/fruitcake/omnipay-sisow)
+[![Total Downloads](https://poser.pugx.org/fruitcake/omnipay-novalnet/d/total.png)](https://packagist.org/packages/fruitcake/omnipay-sisow)
 
 [Omnipay](https://github.com/omnipay/omnipay) is a framework agnostic, multi-gateway payment
 processing library for PHP 5.3+. This package implements Novalnet support for Omnipay.
@@ -15,7 +15,7 @@ processing library for PHP 5.3+. This package implements Novalnet support for Om
 Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply require this package with:
 
 ```
-composer require fruitcakestudio/omnipay-novalnet
+composer require fruitcake/omnipay-novalnet
 ```
 
 
@@ -162,5 +162,5 @@ If you want to keep up to date with release anouncements, discuss ideas for the 
 or ask more detailed questions, there is also a [mailing list](https://groups.google.com/forum/#!forum/omnipay) which
 you can subscribe to.
 
-If you believe you have found a bug, please report it using the [GitHub issue tracker](https://github.com/fruitcakestudio/omnipay-novalnet/issues),
+If you believe you have found a bug, please report it using the [GitHub issue tracker](https://github.com/fruitcake/omnipay-novalnet/issues),
 or better yet, fork the library and submit a pull request.
