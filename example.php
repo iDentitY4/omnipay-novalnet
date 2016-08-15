@@ -4,11 +4,11 @@ use Omnipay\Novalnet\Gateway;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$vendorId = 36;
-$vendorAuthcode = 'xsobjkfadlwtcxqlluzjyllocpxgxz';
-$productId = 3814;
-$tariffId = 6442;
-$paymentKey = '19ca14e7ea6328a42e0eb13d585e4c22';
+$vendorId = 4;
+$vendorAuthcode = 'JyEtHUjjbHNJwVztW6JrafIMHQvici';
+$productId = 14;
+$tariffId = 30;
+$paymentKey = 'a87ff679a2f3e71d9181a67b7542122c';
 
 if (isset($_GET['notify'])) {
     // handle notify request
