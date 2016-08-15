@@ -4,7 +4,8 @@ namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Novalnet\Gateway;
 
-class PayPalPurchaseRequestTest extends AbstractPurchaseRequestTest {
+class PayPalPurchaseRequestTest extends AbstractPurchaseRequestTest
+{
     protected function getRequest()
     {
         return new PurchaseRequestPayPal($this->getHttpClient(), $this->getHttpRequest());
