@@ -95,6 +95,16 @@ class Gateway extends AbstractGateway
         return $this->getParameter('paymentMethod');
     }
 
+    public function getIban()
+    {
+        return $this->getParameter('iban');
+    }
+
+    public function setIban($value)
+    {
+        return $this->setParameter('iban', $value);
+    }
+
     /**
      * Start a purchase request.
      *
