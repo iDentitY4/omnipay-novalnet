@@ -2,9 +2,9 @@
 
 **Novalnet gateway for the Omnipay PHP payment processing library**
 
-[![Build Status](https://travis-ci.org/fruitcake/omnipay-novalnet.png?branch=master)](https://travis-ci.org/fruitcake/omnipay-sisow)
-[![Latest Stable Version](https://poser.pugx.org/fruitcake/omnipay-novalnet/version.png)](https://packagist.org/packages/fruitcake/omnipay-sisow)
-[![Total Downloads](https://poser.pugx.org/fruitcake/omnipay-novalnet/d/total.png)](https://packagist.org/packages/fruitcake/omnipay-sisow)
+[![Build Status](https://travis-ci.org/fruitcake/omnipay-novalnet.png?branch=master)](https://travis-ci.org/fruitcake/omnipay-novalnet)
+[![Latest Stable Version](https://poser.pugx.org/fruitcake/omnipay-novalnet/version.png)](https://packagist.org/packages/fruitcake/omnipay-novalnet)
+[![Total Downloads](https://poser.pugx.org/fruitcake/omnipay-novalnet/d/total.png)](https://packagist.org/packages/fruitcake/omnipay-novalnet)
 
 [Omnipay](https://github.com/omnipay/omnipay) is a framework agnostic, multi-gateway payment
 processing library for PHP 5.3+. This package implements Novalnet support for Omnipay.
