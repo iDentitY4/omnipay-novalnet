@@ -6,11 +6,6 @@ use Omnipay\Common\Message\RedirectResponseInterface;
 
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
-    public function getAmount()
-    {
-        return isset($this->data->amount) ? (int) $this->data->amount : null;
-    }
-
     public function isRedirect()
     {
         return true;
