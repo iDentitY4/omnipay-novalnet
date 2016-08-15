@@ -120,7 +120,7 @@ class Gateway extends AbstractGateway
             return $this->createRequest(PurchaseRequestEps::class, $parameters);
         }
         if (self::CREDITCARD_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest(PurchaseRequestCreditcard::class, $parameters);
+            return $this->createRequest(PurchaseRequestCreditCard::class, $parameters);
         }
 
         return $this->createRequest(PurchaseRequest::class, $parameters);
