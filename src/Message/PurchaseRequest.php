@@ -30,7 +30,7 @@ class PurchaseRequest extends AbstractRequest
             // customer
             'card'
         );
-        $this->validateCard([
+        $this->validateCard(array(
             'billingFirstName',
             'billingLastName',
             'billingAddress1',
@@ -39,7 +39,7 @@ class PurchaseRequest extends AbstractRequest
             'billingCountry',
             'email',
             'phone',
-        ]);
+        ));
 
         if ($this->shouldRedirect()) {
             $this->validate('paymentKey');
@@ -55,9 +55,10 @@ class PurchaseRequest extends AbstractRequest
         $data = array(
             'currency' => $this->getCurrency(),
             'order_no' => $this->getTransactionId(),
-            'key' => $this->getPaymentMethod(),
             'lang' => $this->getLocale() ?: 'EN',
             'test_mode' => $this->getTestMode(),
+            'skip_cfm' => true,
+            'skip_suc' => true,
 
             // customer details
             'remote_ip' => $this->httpRequest->getClientIp(),
@@ -69,6 +70,7 @@ class PurchaseRequest extends AbstractRequest
             'city' => $card->getBillingCity(),
             'country' => $card->getBillingCountry(),
             'country_code' => $card->getBillingCountry(),
+            'lang' => strtolower($card->getBillingCountry()),
             'email' => $card->getEmail(),
             'mobile' => $card->getBillingPhone(),
             'tel' => $card->getBillingPhone(),
@@ -76,7 +78,11 @@ class PurchaseRequest extends AbstractRequest
             'birth_date' => $card->getBirthday(),
         );
 
-        $dataToEncode = [
+        if ($this->getPaymentMethod() != Gateway::ALL_METHODS) {
+            $data['key'] = $this->getPaymentMethod();
+        }
+
+        $dataToEncode = array(
             'auth_code' => $this->getVendorAuthcode(),
             'product' => $this->getProductId(),
             'tariff' => $this->getTariffId(),
@@ -84,29 +90,29 @@ class PurchaseRequest extends AbstractRequest
             'encoded_amount' => $this->getAmountInteger(),
             'uniqid' => $this->getTransactionId(),
             'test_mode' => $this->getTestMode(),
-        ];
+        );
 
         if ($this->shouldRedirect() && $this->shouldEncode()) {
             $encodedData = array_map(function ($value) {
                 return $this->encode($value, $this->getPaymentKey());
             }, $dataToEncode);
 
-            $data = array_merge($data, $encodedData, [
+            $data = array_merge($data, $encodedData, array(
                 'vendor' => $this->getVendorId(),
 //                'hash' => $this->getPaymentKey(),
-            ]);
+            ));
         } elseif ($this->shouldRedirect() && !$this->shouldEncode()) {
-            $data = array_merge($data, [
+            $data = array_merge($data, $dataToEncode, array(
                 'vendor' => $this->getVendorId(),
-            ], $dataToEncode);
+            ));
         } else {
-            $data = array_merge($data, [
+            $data = array_merge($data, array(
                 'vendor_id' => $this->getVendorId(),
                 'vendor_authcode' => $this->getVendorAuthcode(),
                 'product_id' => $this->getProductId(),
                 'tariff_id' => $this->getTariffId(),
                 'amount' => $this->getAmountInteger(),
-            ]);
+            ));
         }
 
         // set description
@@ -274,7 +280,7 @@ class PurchaseRequest extends AbstractRequest
 
     public function getPaymentMethods()
     {
-        return [
+        return array(
             Gateway::SEPA_METHOD => 'SEPA',
             Gateway::CREDITCARD_METHOD => 'Creditcard',
             Gateway::ONLINE_TRANSFER_METHOD => 'Online Transfer (Sofort)',
@@ -282,7 +288,8 @@ class PurchaseRequest extends AbstractRequest
             Gateway::IDEAL_METHOD => 'iDEAL',
             Gateway::EPS_METHOD => 'eps',
             Gateway::GIROPAY_METHOD => 'giropay',
-        ];
+            Gateway::ALL_METHODS => 'make user choose',
+        );
     }
 
     public function isValidPaymentMethod($key)
@@ -348,7 +355,7 @@ class PurchaseRequest extends AbstractRequest
         }
         try {
             $crc = sprintf('%u', crc32($data));# %u is a must for ccrc32 returns a signed value
-            $data = $crc."|".$data;
+            $data = $crc . "|" . $data;
             $data = bin2hex($data . $password);
             $data = strrev(base64_encode($data));
         } catch (Exception $e) {
@@ -392,8 +399,9 @@ class PurchaseRequest extends AbstractRequest
             'tariff' => $tariff_id,
             'amount' => $amount,
             'test_mode' => $test_mode,
-            'uniqid' => $uniqid
+            'uniqid' => $uniqid,
         ), $password);
+
         return array($auth_code, $product_id, $tariff_id, $amount, $test_mode, $uniqid, $hash);
     }
 

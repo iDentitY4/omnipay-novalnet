@@ -63,6 +63,6 @@ abstract class AbstractResponse extends BaseAbstractResponse
      */
     public function getCode()
     {
-        return  isset($this->data->status) ? (int) $this->data->status : null;
+        return isset($this->data->status) ? (int) $this->data->status : null;
     }
 }

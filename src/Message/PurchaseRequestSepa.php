@@ -24,11 +24,11 @@ class PurchaseRequestSepa extends PurchaseRequest
         $data['payment_type'] = 'DIRECT_DEBIT_SEPA';
         $data['sepa_due_date'] = $this->getSepaDueDate();
 
-        $data['payment_details'] = [
+        $data['payment_details'] = array(
             'iban' => $this->getIban(),
             'bankaccount_holder' => $card->getBillingFirstName() . ' ' . $card->getBillingLastName(),
             'mandate_ref' => $this->getMandidateRef(),
-        ];
+        );
 
         return $data;
     }
@@ -74,7 +74,7 @@ class PurchaseRequestSepa extends PurchaseRequest
 
     private function relocateCustomerData($data)
     {
-        $customerDataKeys = [
+        $customerDataKeys = array(
             'remote_ip',
             'firstname',
             'lastname',
@@ -89,15 +89,14 @@ class PurchaseRequestSepa extends PurchaseRequest
             'tel',
             'fax',
             'birth_date',
-        ];
+        );
 
-        $diffKeys = [
+        $diffKeys = array(
             'first_name' => 'firstname',
             'last_name' => 'lastname',
-        ];
+        );
 
         array_walk($data, function ($value, $key) use (&$data, $customerDataKeys, $diffKeys) {
-            $oldKey = $key;
             $key = array_key_exists($key, $diffKeys) ? $diffKeys[$key] : $key;
             if (!in_array($key, $customerDataKeys)) {
                 return;

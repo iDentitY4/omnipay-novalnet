@@ -5,7 +5,7 @@ namespace Omnipay\Novalnet\Message;
 class CompletePurchaseRequest extends PurchaseRequest
 {
     protected $endpoint = 'https://www.Novalnet.nl/Novalnet/iDeal/RestHandler.ashx/StatusRequest';
-    
+
     /**
      * {@inheritdoc}
      */
@@ -35,13 +35,14 @@ class CompletePurchaseRequest extends PurchaseRequest
     {
         return $this->httpRequest->query->get('tid');
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function sendData($data)
     {
         $httpResponse = $this->httpClient->post($this->endpoint, null, $data)->send();
+
         return $this->response = new CompletePurchaseResponse($this, $httpResponse->xml());
     }
 

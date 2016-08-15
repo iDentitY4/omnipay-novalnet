@@ -3,8 +3,7 @@
 namespace Omnipay\Novalnet;
 
 use Omnipay\Common\AbstractGateway;
-use Omnipay\Novalnet\Message\CompletePurchaseRequest;
-use Omnipay\Novalnet\Message\PurchaseRequest;
+use Omnipay\Novalnet\Message\PurchaseRequestAll;
 use Omnipay\Novalnet\Message\PurchaseRequestCreditcard;
 use Omnipay\Novalnet\Message\PurchaseRequestEps;
 use Omnipay\Novalnet\Message\PurchaseRequestGiropay;
@@ -21,6 +20,7 @@ class Gateway extends AbstractGateway
     const ONLINE_TRANSFER_METHOD = 33;
     const PAYPAL_METHOD = 34;
     const SEPA_METHOD = 0;
+    const ALL_METHODS = 99;
 
     /**
      * {@inheritdoc}
@@ -41,7 +41,7 @@ class Gateway extends AbstractGateway
             'productId' => 14,
             'tariffId' => 30,
             'testMode' => true,
-            'paymentMethod' => 0,
+            'paymentMethod' => self::ALL_METHODS,
         );
     }
 
@@ -133,6 +133,6 @@ class Gateway extends AbstractGateway
             return $this->createRequest(PurchaseRequestCreditCard::class, $parameters);
         }
 
-        return $this->createRequest(PurchaseRequest::class, $parameters);
+        return $this->createRequest(PurchaseRequestAll::class, $parameters);
     }
 }
