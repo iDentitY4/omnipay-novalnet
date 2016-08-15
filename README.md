@@ -31,7 +31,7 @@ repository. You can also check out to the documentation provided by Novalnet.
 For common but obscure errors check out these [errors](errors.md). If you find more errors like these, please create a PR to help the others out.
 
 
-## Example 1 - I will figure it out
+## Example
 
 ```php
 use Omnipay\Novalnet\Gateway;
@@ -150,6 +150,7 @@ if (!isset($_POST['tid'])) {
 * 34 - PayPal
 * 50 - eps
 * 6 - Creditcard
+* 99 - All of the above (let the user choose)
 
 
 ## Support
