@@ -1,15 +1,16 @@
 <?php
 
-namespace Omnipay\Novalnet\Message;
+namespace Omnipay\Novalnet\Tests\Message;
 
 use Mockery as m;
 use Omnipay\Common\CreditCard;
+use Omnipay\Novalnet\Message\PurchaseRequestSepa;
 use Omnipay\Novalnet\Tests\TestCase;
 
 class SepaPurchaseRequestTest extends TestCase
 {
     /**
-     * @var PurchaseRequest
+     * @var PurchaseRequestSepa
      */
     private $request;
 

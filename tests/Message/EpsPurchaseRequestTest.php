@@ -1,8 +1,9 @@
 <?php
 
-namespace Omnipay\Novalnet\Message;
+namespace Omnipay\Novalnet\Tests\Message;
 
 use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\Message\PurchaseRequestEps;
 
 class EpsPurchaseRequestTest extends AbstractPurchaseRequestTest
 {

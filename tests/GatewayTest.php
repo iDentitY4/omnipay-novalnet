@@ -1,7 +1,8 @@
 <?php
 
-namespace Omnipay\Novalnet;
+namespace Omnipay\Novalnet\Tests;
 
+use Omnipay\Novalnet\Gateway;
 use Omnipay\Novalnet\Message\PurchaseRequest;
 use Omnipay\Novalnet\Tests\Traits\GeneratesValidCards;
 use Omnipay\Tests\GatewayTestCase;
