@@ -3,6 +3,7 @@
 namespace Omnipay\Novalnet;
 
 use Omnipay\Common\AbstractGateway;
+
 use Omnipay\Novalnet\Message\PurchaseRequestAll;
 use Omnipay\Novalnet\Message\PurchaseRequestCreditcard;
 use Omnipay\Novalnet\Message\PurchaseRequestEps;

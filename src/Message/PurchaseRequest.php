@@ -401,7 +401,7 @@ class PurchaseRequest extends AbstractRequest
             'test_mode' => $test_mode,
             'uniqid' => $uniqid,
         ), $password);
-
+        
         return array($auth_code, $product_id, $tariff_id, $amount, $test_mode, $uniqid, $hash);
     }
 

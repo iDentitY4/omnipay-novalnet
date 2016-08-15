@@ -5,7 +5,7 @@ namespace Omnipay\Novalnet\Message;
 class CompletePurchaseRequest extends PurchaseRequest
 {
     protected $endpoint = 'https://www.Novalnet.nl/Novalnet/iDeal/RestHandler.ashx/StatusRequest';
-
+    
     /**
      * {@inheritdoc}
      */
