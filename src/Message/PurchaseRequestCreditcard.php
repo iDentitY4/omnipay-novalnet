@@ -2,7 +2,7 @@
 
 namespace Omnipay\Novalnet\Message;
 
-class PurchaseRequestCreditcard extends PurchaseRequest
+class PurchaseRequestCreditCard extends PurchaseRequest
 {
     public $endpoint = 'https://payport.novalnet.de/global_pci_payport';
 
