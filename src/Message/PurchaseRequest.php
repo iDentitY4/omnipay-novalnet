@@ -95,8 +95,9 @@ class PurchaseRequest extends AbstractRequest
         );
 
         if ($this->shouldRedirect() && $this->shouldEncode()) {
-            $encodedData = array_map(function ($value) {
-                return $this->encode($value, $this->getPaymentKey());
+            $self = $this;
+            $encodedData = array_map(function ($value) use($self) {
+                return $self->encode($value, $self->getPaymentKey());
             }, $dataToEncode);
 
             $data = array_merge($data, $encodedData, array(
