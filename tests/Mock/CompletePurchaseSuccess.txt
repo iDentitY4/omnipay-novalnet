@@ -1,0 +1,20 @@
+HTTP/1.1 200 OK
+Date: Tue, 16 Aug 2016 14:52:36 GMT
+Server: Apache/2.2.31 (Linux/SUSE)
+Transfer-Encoding: chunked
+Content-Type: text/xml
+
+<nnxml>
+  <tid>13380800018726060</tid>
+  <test_mode>1</test_mode>
+  <status>100</status>
+  <currency>EUR</currency>
+  <amount>1021</amount>
+  <customer_no></customer_no>
+  <order_no>12345678</order_no>
+  <cost>63</cost>
+  <subs_id></subs_id>
+  <next_subs_cycle></next_subs_cycle>
+  <payment_id>49</payment_id>
+  <payment_type>IDEAL</payment_type>
+</nnxml>

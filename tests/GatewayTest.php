@@ -3,6 +3,7 @@
 namespace Omnipay\Novalnet\Tests;
 
 use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\Message\CompletePurchaseRequest;
 use Omnipay\Novalnet\Message\PurchaseRequest;
 use Omnipay\Novalnet\Tests\Traits\GeneratesValidCards;
 use Omnipay\Tests\GatewayTestCase;
@@ -29,6 +30,14 @@ class GatewayTest extends GatewayTestCase
         $request = $this->gateway->purchase();
 
         $this->assertInstanceOf(PurchaseRequest::class, $request);
+    }
+
+    public function testCompletePurchase()
+    {
+        /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
+        $request = $this->gateway->completePurchase();
+
+        $this->assertInstanceOf(CompletePurchaseRequest::class, $request);
     }
 
     public function testPurchaseCreditCard()
