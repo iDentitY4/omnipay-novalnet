@@ -2,6 +2,7 @@
 
 namespace Omnipay\Novalnet\Message;
 
+use Omnipay\Common\Exception\InvalidResponseException;
 use SimpleXMLElement;
 
 /**
@@ -10,7 +11,7 @@ use SimpleXMLElement;
 class CompletePurchaseRequest extends PurchaseRequest
 {
     public $endpoint = 'https://payport.novalnet.de/nn_infoport.xml';
-    
+
     /**
      * {@inheritdoc}
      */
@@ -37,6 +38,7 @@ class CompletePurchaseRequest extends PurchaseRequest
     {
         return $this->httpRequest->get('tid');
     }
+
     /**
      * {@inheritdoc}
      */
@@ -49,6 +51,10 @@ class CompletePurchaseRequest extends PurchaseRequest
 
         // send request
         $httpResponse = $this->httpClient->post($this->endpoint, null, $xml->asXML())->send();
+
+        if ($httpResponse->getContentType() !== 'text/xml') {
+            throw new InvalidResponseException('Invalid response from gateway, code: ' . $this->getStatusCode());
+        }
 
         // return response
         return $this->response = new CompletePurchaseResponse($this, $httpResponse->xml());
