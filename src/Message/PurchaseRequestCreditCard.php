@@ -11,7 +11,7 @@ class PurchaseRequestCreditCard extends PurchaseRequest
         $data = parent::getData();
         $card = $this->getCard();
         $card->validate();
-        $this->validateCard(['cvv']);
+        $this->validateCard(array('cvv'));
 
         $data['cc_no'] = $card->getNumber();
         $data['cc_exp_month'] = $card->getExpiryMonth();
