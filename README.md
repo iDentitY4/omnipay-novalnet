@@ -48,10 +48,46 @@ $gateway->setTariffId($tariffId);
 
 
 /*
- * 2.1. Handle success,error and/or notify request
+ * 2. Define the purchase parameters
+ *
+ * The easiest way to get a payment method working is starting
+ * with zero parameters. Then start adding the parameters
+ * which are noted as missed on sending the request.
+ */
+$params = [
+    'amount' => 10.21,
+    'currency' => 'EUR',
+    'transactionId' => '12345678',
+    'iban' => 'DE24300209002411761956',
+
+    'notifyUrl' => 'http://example.com/notify',
+    'returnUrl' => 'http://example.com/return',
+    'cancelUrl' => 'http://example.com/cancel',
+    'paymentKey' => $paymentKey,
+
+    // client details
+    'card' => [
+        'firstName' => 'John',
+        'lastName' => 'Doe',
+        'address1' => 'Streetname 1', // note that the house number is included
+        'postcode' => '1234AB',
+        'city' => 'Amsterdam',
+        'country' => 'NL',
+        'email' => 'info@example.com',
+        'phone' => '+31612345678',
+        'number' => '4200 0000 0000 0000',
+        'expiryMonth' => date('m', strtotime('+1 month')),
+        'expiryYear' => date('Y', strtotime('+1 month')),
+        'cvv' => 123,
+    ],
+];
+
+
+/*
+ * 3.1. Handle success,error and/or notify request
  */
 if (isset($_POST['tid'])) {
-    $response = $gateway->completePurchase()->send();
+    $response = $gateway->completePurchase($params)->send();
     if ($response->isSuccessful()) {
         echo 'Success [code: '. $response->getStatus() . ']';
     } else {
@@ -62,11 +98,11 @@ if (isset($_POST['tid'])) {
 
 
 /*
- * 2.2. Initialize purchase
+ * 3.2. Initialize purchase
  */
 if (!isset($_POST['tid'])) {
     /*
-     * 2.2.1. Choose the desired payment method
+     * 3.2.1. Choose the desired payment method
      */
     // without redirect
     # $gateway->setPaymentMethod(Gateway::SEPA_METHOD);
@@ -83,49 +119,19 @@ if (!isset($_POST['tid'])) {
 
 
     /*
-     * 2.2.2. Create the request
-     *
-     * The easiest way to get a payment method working is starting
-     * with zero parameters. Then start adding the parameters
-     * which are noted as missed on sending the request.
+     * 3.2.2. Create the request
      */
-    $request = $gateway->purchase([
-        'amount' => 10.21,
-        'currency' => 'EUR',
-        'transactionId' => '12345678',
-        'iban' => 'DE24300209002411761956',
-
-        'notifyUrl' => 'https://example.com/notify',
-        'returnUrl' => 'https://example.com/success',
-        'cancelUrl' => 'https://example.com/failed',
-        'paymentKey' => $paymentKey,
-
-        // client details
-        'card' => [
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-            'address1' => 'Streetname 1', // note the house number in the
-            'postcode' => '1234AB',
-            'city' => 'Amsterdam',
-            'country' => 'NL',
-            'email' => 'info@example.com',
-            'phone' => '+31612345678',
-            'number' => '4200 0000 0000 0000',
-            'expiryMonth' => date('m', strtotime('+1 month')),
-            'expiryYear' => date('Y', strtotime('+1 month')),
-            'cvv' => 123,
-        ],
-    ]);
+    $request = $gateway->purchase($params);
 
 
     /*
-     * 2.2.3. Receive the response
+     * 3.2.3. Receive the response
      */
     $response = $request->send();
 
 
     /*
-     * 2.2.4. Handle the response appropriate
+     * 3.2.4. Handle the response appropriate
      */
     if ($response->isSuccessful()) {
         echo $response->getMessage();

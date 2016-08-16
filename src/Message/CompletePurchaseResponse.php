@@ -2,6 +2,8 @@
 
 namespace Omnipay\Novalnet\Message;
 
+use Omnipay\Common\Exception\InvalidResponseException;
+
 class CompletePurchaseResponse extends AbstractResponse
 {
     /**
@@ -9,6 +11,16 @@ class CompletePurchaseResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
+        $originalTransactionId = (string) $this->request->getTransactionId();
+        $transactionId = (string) $this->getTransactionId();
+
+        if ($originalTransactionId && $transactionId !== $originalTransactionId) {
+            throw new InvalidResponseException(
+                'The transactionId in the parameters ('.$originalTransactionId.') '.
+                'does not match the transactionId from the gateway: ' . $transactionId
+            );
+        }
+
         return $this->getStatus() == 100;
     }
 
@@ -67,13 +79,17 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getTransactionReference()
     {
-        return $this->getTransactionId();
+        if (isset($this->data->tid)) {
+            return (int) $this->data->tid;
+        }
+
+        return false;
     }
 
     public function getTransactionId()
     {
-        if (isset($this->data->tid)) {
-            return (int) $this->data->tid;
+        if (isset($this->data->order_no)) {
+            return (int) $this->data->order_no;
         }
 
         return false;
