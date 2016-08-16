@@ -2,25 +2,14 @@
 
 namespace Omnipay\Novalnet\Message;
 
-class CompletePurchaseResponse extends PurchaseResponse
+class CompletePurchaseResponse extends AbstractResponse
 {
-    public function isRedirect()
-    {
-        return false;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function isSuccessful()
     {
-        if (isset($this->data->transaction) && isset($this->data->transaction->status)) {
-            if ((string) $this->data->transaction->status == 'Success') {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->getStatus() == 100;
     }
 
     /**
@@ -28,19 +17,72 @@ class CompletePurchaseResponse extends PurchaseResponse
      */
     public function getMessage()
     {
-        if ($status = $this->getStatus()) {
-            return $status;
-        } elseif (!is_null($this->code)) {
-            return $this->data;
+        $this->getStatus();
+    }
+
+    public function getStatus()
+    {
+        if (isset($this->data->status)) {
+            return (int) $this->data->status;
         }
 
         return null;
     }
 
-    public function getStatus()
+    public function getAmount()
     {
-        if (isset($this->data->transaction) && isset($this->data->transaction->status)) {
-            return (string) $this->data->transaction->status;
+        if (isset($this->data->amount)) {
+            return (int) $this->data->amount;
+        }
+
+        return null;
+    }
+
+    public function getCustomerNumber()
+    {
+        if (isset($this->data->customer_no)) {
+            return (int) $this->data->customer_no;
+        }
+
+        return null;
+    }
+
+    public function getTestMode()
+    {
+        if (isset($this->data->test_mode)) {
+            return (boolean) $this->data->test_mode;
+        }
+
+        return false;
+    }
+
+    public function getCurrency()
+    {
+        if (isset($this->data->currency)) {
+            return (string) $this->data->currency;
+        }
+
+        return false;
+    }
+
+    public function getTransactionReference()
+    {
+        return $this->getTransactionId();
+    }
+
+    public function getTransactionId()
+    {
+        if (isset($this->data->tid)) {
+            return (int) $this->data->tid;
+        }
+
+        return false;
+    }
+
+    public function getPaymentMethod()
+    {
+        if (isset($this->data->payment_type)) {
+            return (string) $this->data->payment_type;
         }
 
         return null;

@@ -4,6 +4,7 @@ namespace Omnipay\Novalnet;
 
 use Omnipay\Common\AbstractGateway;
 
+use Omnipay\Novalnet\Message\CompletePurchaseRequest;
 use Omnipay\Novalnet\Message\PurchaseRequestAll;
 use Omnipay\Novalnet\Message\PurchaseRequestCreditcard;
 use Omnipay\Novalnet\Message\PurchaseRequestEps;
@@ -145,5 +146,17 @@ class Gateway extends AbstractGateway
         }
 
         return $this->createRequest(PurchaseRequestAll::class, $parameters);
+    }
+
+    /**
+     * Complete a purchase.
+     *
+     * @param array $parameters
+     *
+     * @return CompletePurchaseRequest
+     */
+    public function completePurchase(array $parameters = array())
+    {
+        return $this->createRequest(CompletePurchaseRequest::class, $parameters);
     }
 }

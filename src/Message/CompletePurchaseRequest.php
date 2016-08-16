@@ -2,9 +2,11 @@
 
 namespace Omnipay\Novalnet\Message;
 
+use SimpleXMLElement;
+
 class CompletePurchaseRequest extends PurchaseRequest
 {
-    protected $endpoint = 'https://www.Novalnet.nl/Novalnet/iDeal/RestHandler.ashx/StatusRequest';
+    public $endpoint = 'https://payport.novalnet.de/nn_infoport.xml';
     
     /**
      * {@inheritdoc}
@@ -14,18 +16,15 @@ class CompletePurchaseRequest extends PurchaseRequest
         $this->validate(
             'vendorId',
             'vendorAuthcode',
-            'productId',
-            'tariffId'
+            'productId'
         );
 
         $data = array(
             'vendor_id' => $this->getVendorId(),
             'vendor_authcode' => $this->getVendorAuthcode(),
+            'request_type' => 'TRANSACTION_STATUS',
             'product_id' => $this->getProductId(),
-            'tariffId' => $this->getTariffId(),
             'tid' => $this->getTransactionReference(),
-            'status_text' => $this->getStatusText(),
-            'status' => $this->getStatusCode(),
         );
 
         return $data;
@@ -33,26 +32,49 @@ class CompletePurchaseRequest extends PurchaseRequest
 
     public function getTransactionReference()
     {
-        return $this->httpRequest->query->get('tid');
+        return $this->httpRequest->get('tid');
     }
-
     /**
      * {@inheritdoc}
      */
     public function sendData($data)
     {
-        $httpResponse = $this->httpClient->post($this->endpoint, null, $data)->send();
+        // build xml
+        $xml = new SimpleXMLElement('<nnxml></nnxml>');
+        $subElement = $xml->addChild('info_request');
+        $this->arrayToXml($data, $subElement);
 
+        // send request
+        $httpResponse = $this->httpClient->post($this->endpoint, null, $xml->asXML())->send();
+
+        // return response
         return $this->response = new CompletePurchaseResponse($this, $httpResponse->xml());
     }
 
-    private function getStatusText()
+    public function getStatusText()
     {
-        return $this->httpRequest->query->get('status_text');
+        return $this->httpRequest->get('status_text');
     }
 
-    private function getStatusCode()
+    public function getStatusCode()
     {
-        return $this->httpRequest->query->get('status');
+        return $this->httpRequest->get('status');
+    }
+
+    private function arrayToXml($array, &$xml_user_info)
+    {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                if (!is_numeric($key)) {
+                    $subnode = $xml_user_info->addChild("$key");
+                    $this->arrayToXml($value, $subnode);
+                } else {
+                    $subnode = $xml_user_info->addChild("item$key");
+                    $this->arrayToXml($value, $subnode);
+                }
+            } else {
+                $xml_user_info->addChild("$key", htmlspecialchars("$value"));
+            }
+        }
     }
 }

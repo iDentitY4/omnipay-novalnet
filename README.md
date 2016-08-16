@@ -36,40 +36,37 @@ For common but obscure errors check out these [errors](errors.md). If you find m
 ```php
 use Omnipay\Novalnet\Gateway;
 
-if (isset($_GET['notify'])) {
-    // handle notify request
-    die();
-}
+/*
+ * 1. Create the gateway
+ */
+$gateway = new Gateway();
 
-if (isset($_POST['tid']) && isset($_POST['status'])) {
-    switch ($_POST['status']) {
-        case 100: // Success
-            echo $_POST['status_text'];
-            break;
-        case 90: // Paypal Payment Pending
-            echo $_POST['status_text'];
-            break;
-        default:
-            echo "Failed - " . $_POST['status'] . " | " . $_POST['status_text'];
-            break;
+$gateway->setVendorId($vendorId);
+$gateway->setVendorAuthcode($vendorAuthcode);
+$gateway->setProductId($productId);
+$gateway->setTariffId($tariffId);
+
+
+/*
+ * 2.1. Handle success,error and/or notify request
+ */
+if (isset($_POST['tid'])) {
+    $response = $gateway->completePurchase()->send();
+    if ($response->isSuccessful()) {
+        echo 'Success [code: '. $response->getStatus() . ']';
+    } else {
+        echo 'Failed [code: '. $response->getStatus() . ']';
     }
     die();
 }
 
+
+/*
+ * 2.2. Initialize purchase
+ */
 if (!isset($_POST['tid'])) {
     /*
-     * 1. Create the gateway
-     */
-    $gateway = new Gateway();
-
-    $gateway->setVendorId($vendorId);
-    $gateway->setVendorAuthcode($vendorAuthcode);
-    $gateway->setProductId($productId);
-    $gateway->setTariffId($tariffId);
-
-
-    /*
-     * 2. Choose the desired payment method
+     * 2.2.1. Choose the desired payment method
      */
     // without redirect
     # $gateway->setPaymentMethod(Gateway::SEPA_METHOD);
@@ -82,9 +79,11 @@ if (!isset($_POST['tid'])) {
     # $gateway->setPaymentMethod(Gateway::PAYPAL_METHOD);
     # $gateway->setPaymentMethod(Gateway::CREDITCARD_METHOD);
 
+    # $gateway->setPaymentMethod(Gateway::ALL_METHODS); // default when no payment method is given
+
 
     /*
-     * 3. Create the request
+     * 2.2.2. Create the request
      *
      * The easiest way to get a payment method working is starting
      * with zero parameters. Then start adding the parameters
@@ -120,13 +119,13 @@ if (!isset($_POST['tid'])) {
 
 
     /*
-     * 4. Receive the response
+     * 2.2.3. Receive the response
      */
     $response = $request->send();
 
 
     /*
-     * 5. Handle the response appropriate
+     * 2.2.4. Handle the response appropriate
      */
     if ($response->isSuccessful()) {
         echo $response->getMessage();
