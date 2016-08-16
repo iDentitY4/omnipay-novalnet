@@ -330,7 +330,7 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('cancelMethod', $value);
     }
 
-    protected function validateCard($parameters = [])
+    protected function validateCard($parameters = array())
     {
         $card = $this->getCard();
         foreach ($parameters as $parameter) {
