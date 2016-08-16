@@ -4,6 +4,9 @@ namespace Omnipay\Novalnet\Message;
 
 use SimpleXMLElement;
 
+/**
+ * @method CompletePurchaseResponse send()
+ */
 class CompletePurchaseRequest extends PurchaseRequest
 {
     public $endpoint = 'https://payport.novalnet.de/nn_infoport.xml';

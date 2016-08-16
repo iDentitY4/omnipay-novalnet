@@ -7,6 +7,8 @@ use Omnipay\Novalnet\Gateway;
 
 /**
  * Novalnet Base Purchase Request
+ *
+ * @method PurchaseResponse send()
  */
 class PurchaseRequest extends AbstractRequest
 {
