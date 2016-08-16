@@ -3,14 +3,27 @@
 namespace Omnipay\Novalnet\Tests;
 
 use Omnipay\Novalnet\Gateway;
-use Omnipay\Novalnet\Message\CompletePurchaseRequest;
-use Omnipay\Novalnet\Message\PurchaseRequest;
-use Omnipay\Novalnet\Tests\Traits\GeneratesValidCards;
 use Omnipay\Tests\GatewayTestCase;
 
 class GatewayTest extends GatewayTestCase
 {
-    use GeneratesValidCards;
+    public function getValidCard()
+    {
+        return array(
+            'firstName' => 'Max',
+            'lastName' => 'Musterman',
+            'number' => '4200000000000000',
+            'expiryMonth' => rand(1, 12),
+            'expiryYear' => gmdate('Y') + rand(1, 5),
+            'cvv' => 123,
+            'billingAddress1' => 'Musterstr 2',
+            'billingAddress2' => 'Billsville',
+            'billingCity' => 'Musterhausen',
+            'billingPostcode' => '12345',
+            'billingCountry' => 'DE',
+            'email' => 'test@test.de',
+        );
+    }
 
     /**
      * @var Gateway
@@ -29,7 +42,7 @@ class GatewayTest extends GatewayTestCase
         /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
         $request = $this->gateway->purchase();
 
-        $this->assertInstanceOf(PurchaseRequest::class, $request);
+        $this->assertInstanceOf('\Omnipay\Novalnet\Message\PurchaseRequest', $request);
     }
 
     public function testCompletePurchase()
@@ -37,7 +50,7 @@ class GatewayTest extends GatewayTestCase
         /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
         $request = $this->gateway->completePurchase();
 
-        $this->assertInstanceOf(CompletePurchaseRequest::class, $request);
+        $this->assertInstanceOf('\Omnipay\Novalnet\Message\CompletePurchaseRequest', $request);
     }
 
     public function testPurchaseCreditCard()
@@ -45,7 +58,7 @@ class GatewayTest extends GatewayTestCase
         /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
         $request = $this->gateway->purchase();
 
-        $this->assertInstanceOf(PurchaseRequest::class, $request);
+        $this->assertInstanceOf('\Omnipay\Novalnet\Message\PurchaseRequest', $request);
 
         // default options
         $this->assertEquals(4, $request->getVendorId());

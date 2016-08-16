@@ -127,25 +127,25 @@ class Gateway extends AbstractGateway
     public function purchase(array $parameters = array())
     {
         if (self::SEPA_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest(PurchaseRequestSepa::class, $parameters);
+            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestSepa', $parameters);
         }
         if (self::GIROPAY_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest(PurchaseRequestGiropay::class, $parameters);
+            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestGiropay', $parameters);
         }
-        if (in_array($this->getPaymentMethod(), [self::ONLINE_TRANSFER_METHOD, self::IDEAL_METHOD])) {
-            return $this->createRequest(PurchaseRequestIdeal::class, $parameters);
+        if (in_array($this->getPaymentMethod(), array(self::ONLINE_TRANSFER_METHOD, self::IDEAL_METHOD))) {
+            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestIdeal', $parameters);
         }
         if (self::PAYPAL_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest(PurchaseRequestPayPal::class, $parameters);
+            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestPayPal', $parameters);
         }
         if (self::EPS_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest(PurchaseRequestEps::class, $parameters);
+            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestEps', $parameters);
         }
         if (self::CREDITCARD_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest(PurchaseRequestCreditCard::class, $parameters);
+            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestCreditCard', $parameters);
         }
 
-        return $this->createRequest(PurchaseRequestAll::class, $parameters);
+        return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestAll', $parameters);
     }
 
     /**
@@ -157,6 +157,6 @@ class Gateway extends AbstractGateway
      */
     public function completePurchase(array $parameters = array())
     {
-        return $this->createRequest(CompletePurchaseRequest::class, $parameters);
+        return $this->createRequest('\Omnipay\Novalnet\Message\CompletePurchaseRequest', $parameters);
     }
 }

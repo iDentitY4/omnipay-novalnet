@@ -46,7 +46,7 @@ abstract class AbstractPurchaseRequestTest extends TestCase
      */
     protected function initializeRequest()
     {
-        $options = [
+        $options = array(
             'vendorId' => 4,
             'vendorAuthcode' => 'JyEtHUjjbHNJwVztW6JrafIMHQvici',
             'productId' => 14,
@@ -65,7 +65,7 @@ abstract class AbstractPurchaseRequestTest extends TestCase
             'paymentKey' => 'a87ff679a2f3e71d9181a67b7542122c',
 
             // client details
-            'card' => [
+            'card' => array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'address1' => 'Streetname 1', // note the house number in the
@@ -78,8 +78,8 @@ abstract class AbstractPurchaseRequestTest extends TestCase
                 'expiryMonth' => date('m', strtotime('+1 month')),
                 'expiryYear' => date('Y', strtotime('+1 month')),
                 'cvv' => 123,
-            ],
-        ];
+            ),
+        );
 
         return $this->request->initialize($options);
     }
