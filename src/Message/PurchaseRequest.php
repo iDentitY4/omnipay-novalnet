@@ -347,7 +347,7 @@ class PurchaseRequest extends AbstractRequest
         return true;
     }
 
-    protected function encode($data, $password)
+    public function encode($data, $password)
     {
         $data = trim($data);
         if ($data == '') {
