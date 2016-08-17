@@ -67,6 +67,5 @@ class GatewayTest extends GatewayTestCase
         $this->assertEquals(30, $request->getTariffId());
         $this->assertEquals(true, $request->getTestMode());
         $this->assertEquals(99, $request->getPaymentMethod());
-        $this->assertTrue($request->isValidPaymentMethod($request->getPaymentMethod()));
     }
 }
