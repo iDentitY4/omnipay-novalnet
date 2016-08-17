@@ -26,6 +26,7 @@ class CompletePurchaseRequest extends PurchaseRequest
         $data = array(
             'vendor_id' => $this->getVendorId(),
             'vendor_authcode' => $this->getVendorAuthcode(),
+            'test_mode' => $this->getTestMode(),
             'request_type' => 'TRANSACTION_STATUS',
             'product_id' => $this->getProductId(),
             'tid' => $this->getTransactionReference(),
