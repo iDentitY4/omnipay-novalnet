@@ -117,6 +117,16 @@ class Gateway extends AbstractGateway
         return $this->setParameter('iban', $value);
     }
 
+    public function getChosenOnly()
+    {
+        return $this->getParameter('chosenOnly');
+    }
+
+    public function setChosenOnly($value = true)
+    {
+        return $this->setParameter('chosenOnly', $value);
+    }
+
     /**
      * Start a purchase request.
      *
@@ -125,6 +135,27 @@ class Gateway extends AbstractGateway
      * @return \Omnipay\Novalnet\Message\PurchaseRequest
      */
     public function purchase(array $parameters = array())
+    {
+        if (!$this->getChosenOnly()) {
+            return $this->determineRequest($parameters);
+        }
+
+        return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestAll', $parameters);
+    }
+
+    /**
+     * Complete a purchase.
+     *
+     * @param array $parameters
+     *
+     * @return CompletePurchaseRequest
+     */
+    public function completePurchase(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Novalnet\Message\CompletePurchaseRequest', $parameters);
+    }
+
+    private function determineRequest(array $parameters = array())
     {
         if (self::SEPA_METHOD == $this->getPaymentMethod()) {
             return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestSepa', $parameters);
@@ -146,17 +177,5 @@ class Gateway extends AbstractGateway
         }
 
         return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestAll', $parameters);
-    }
-
-    /**
-     * Complete a purchase.
-     *
-     * @param array $parameters
-     *
-     * @return CompletePurchaseRequest
-     */
-    public function completePurchase(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Novalnet\Message\CompletePurchaseRequest', $parameters);
     }
 }

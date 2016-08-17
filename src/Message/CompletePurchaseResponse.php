@@ -24,7 +24,7 @@ class CompletePurchaseResponse extends AbstractResponse
         $originalTransactionId = (string) $this->request->getTransactionId();
         $transactionId = (string) $this->getTransactionId();
 
-        if ($originalTransactionId && $transactionId !== $originalTransactionId) {
+        if ($originalTransactionId && $transactionId && $transactionId !== $originalTransactionId) {
             throw new InvalidResponseException(
                 'The transactionId in the parameters ('.$originalTransactionId.') '.
                 'does not match the transactionId from the gateway: ' . $transactionId
@@ -37,7 +37,7 @@ class CompletePurchaseResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        return $this->getStatus() == 100;
+        return $this->getStatus() === 100;
     }
 
     /**
@@ -45,7 +45,11 @@ class CompletePurchaseResponse extends AbstractResponse
      */
     public function getMessage()
     {
-        $this->getStatus();
+        if (isset($this->data->transaction_status) && isset($this->data->transaction_status->status_message)) {
+            return (string) $this->data->transaction_status->status_message;
+        }
+
+        return null;
     }
 
     public function getStatus()
@@ -69,7 +73,7 @@ class CompletePurchaseResponse extends AbstractResponse
     public function getCustomerNumber()
     {
         if (isset($this->data->customer_no)) {
-            return (int) $this->data->customer_no;
+            return (string) $this->data->customer_no;
         }
 
         return null;
@@ -90,25 +94,25 @@ class CompletePurchaseResponse extends AbstractResponse
             return (string) $this->data->currency;
         }
 
-        return false;
+        return null;
     }
 
     public function getTransactionReference()
     {
         if (isset($this->data->tid)) {
-            return (int) $this->data->tid;
+            return (string) $this->data->tid;
         }
 
-        return false;
+        return null;
     }
 
     public function getTransactionId()
     {
         if (isset($this->data->order_no)) {
-            return (int) $this->data->order_no;
+            return (string) $this->data->order_no;
         }
 
-        return false;
+        return null;
     }
 
     public function getPaymentMethod()

@@ -53,8 +53,9 @@ class CompletePurchaseRequest extends PurchaseRequest
         // send request
         $httpResponse = $this->httpClient->post($this->endpoint, null, $xml->asXML())->send();
 
+        // If we cannot retrieve the data from the XML API, use the request parameters
         if ($httpResponse->getContentType() !== 'text/xml') {
-            throw new InvalidResponseException('Invalid response from gateway, code: ' . $this->getStatusCode());
+            return $this->response = new CompletePurchaseResponse($this, (object) $this->httpRequest->request->all());
         }
 
         // return response

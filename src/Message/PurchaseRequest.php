@@ -47,11 +47,6 @@ class PurchaseRequest extends AbstractRequest
             $this->validate('paymentKey');
         }
 
-        // validate payment method
-        if (!$this->isValidPaymentMethod($this->getPaymentMethod())) {
-            throw new InvalidRequestException("The given payment method is invalid");
-        }
-
         /** @var \Omnipay\Common\CreditCard $card */
         $card = $this->getCard();
         $data = array(
@@ -82,6 +77,10 @@ class PurchaseRequest extends AbstractRequest
 
         if ($this->getPaymentMethod() != Gateway::ALL_METHODS) {
             $data['key'] = $this->getPaymentMethod();
+
+            if ($this->getChosenOnly()) {
+                $data['chosen_only'] = true;
+            }
         }
 
         $dataToEncode = array(
@@ -102,7 +101,6 @@ class PurchaseRequest extends AbstractRequest
 
             $data = array_merge($data, $encodedData, array(
                 'vendor' => $this->getVendorId(),
-//                'hash' => $this->getPaymentKey(),
             ));
         } elseif ($this->shouldRedirect() && !$this->shouldEncode()) {
             $data = array_merge($data, $dataToEncode, array(
@@ -295,11 +293,6 @@ class PurchaseRequest extends AbstractRequest
         );
     }
 
-    public function isValidPaymentMethod($key)
-    {
-        return array_key_exists($key, $this->getPaymentMethods());
-    }
-
     public function setPaymentMethod($value)
     {
         return $this->setParameter('paymentMethod', $value);
@@ -329,6 +322,16 @@ class PurchaseRequest extends AbstractRequest
     public function setCancelMethod($value)
     {
         return $this->setParameter('cancelMethod', $value);
+    }
+
+    public function getChosenOnly()
+    {
+        return $this->getParameter('chosenOnly');
+    }
+
+    public function setChosenOnly($value)
+    {
+        return $this->setParameter('chosenOnly', $value);
     }
 
     protected function validateCard($parameters = array())

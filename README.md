@@ -157,6 +157,18 @@ if (!isset($_POST['tid'])) {
 * 6 - Creditcard
 * 99 - All of the above (let the user choose)
 
+### Payment form/page hosted on Novalnet Server
+When one of the above payment methods is set (excluding nr. 99), you can also set `chosenOnly` property.
+
+When `true`, the user will be redirected to Novalnet’s payment portal. There they can complete their personal details and finish the payment. This can be usefull if you don’t want to handle the user’s credit card details for example.
+
+Code:
+
+```php
+    $gateway->setPaymentMethod(Gateway::CREDITCARD_METHOD);
+    $gateway->setChosenOnly(true);
+```
+
 
 ## Support
 
