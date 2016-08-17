@@ -158,7 +158,7 @@ if (!isset($_POST['tid'])) {
 * 99 - All of the above (let the user choose)
 
 ### Payment form/page hosted on Novalnet Server
-When one of the above payment methods is set (excluding nr. 99), you can also set `chosenOnly` property.
+When one of the above payment methods is set (excluding nr. 99), you can also set the `chosenOnly` property.
 
 When `true`, the user will be redirected to Novalnet’s payment portal. There they can complete their personal details and finish the payment. This can be usefull if you don’t want to handle the user’s credit card details for example.
 
@@ -168,6 +168,13 @@ Code:
     $gateway->setPaymentMethod(Gateway::CREDITCARD_METHOD);
     $gateway->setChosenOnly(true);
 ```
+Example url with chosen only property: [https://payport.novalnet.de/nn/paygate.jsp?vendor=4&product=14&tariff=30&amount=522&lang=en&key=6&chosen_only=1](https://payport.novalnet.de/nn/paygate.jsp?vendor=4&product=14&tariff=30&amount=522&lang=en&key=6&chosen_only=1)
+
+Example url using payment method 99: [https://payport.novalnet.de/nn/paygate.jsp?vendor=4&product=14&tariff=30&amount=522&lang=en](https://payport.novalnet.de/nn/paygate.jsp?vendor=4&product=14&tariff=30&amount=522&lang=en)
+
+__Note:__ _For payment method 99 as well as the `chosenOnly` property you can still include the user’s data in the parameters. This allows Novalnet to autofill the form with the matching fields._
+
+_Confidential information such as credit card details should not be sent nor be asked when using these settings._
 
 
 ## Support
