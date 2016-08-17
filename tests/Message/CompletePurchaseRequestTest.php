@@ -33,21 +33,6 @@ class CompletePurchaseRequestTest extends TestCase
         $this->request = $this->request->setTransactionId('12345678');
     }
 
-    /*public function testInvalidTransactionId()
-    {
-        var_dump($this->request->getTransactionId());
-//        $this->setMockHttpResponse('CompletePurchaseSuccess.txt');
-        try {
-            $response = $this->request->send();
-        } catch (InvalidResponseException $exception) {
-            $this->assertTrue(true);
-            return;
-        }
-
-        $this->assertTrue(false);
-        return;
-    }*/
-
     public function testSendSuccess()
     {
         $this->setMockHttpResponse('CompletePurchaseSuccess.txt');
