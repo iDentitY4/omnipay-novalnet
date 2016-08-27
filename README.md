@@ -23,7 +23,8 @@ composer require fruitcake/omnipay-novalnet
 
 The following gateways are provided by this package:
 
-* Novalnet
+* Novalnet_Redirect
+* Novalnet_Xml
 
 For general usage instructions, please see the main [Omnipay](https://github.com/omnipay/omnipay)
 repository. You can also check out to the documentation provided by Novalnet.
@@ -34,12 +35,13 @@ For common but obscure errors check out these [errors](errors.md). If you find m
 ## Example
 
 ```php
-use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\RedirectGateway;
 
 /*
  * 1. Create the gateway
  */
-$gateway = new Gateway();
+$gateway = new RedirectGateway();
+//$gateway = new XmlGateway(); // For XML
 
 $gateway->setVendorId($vendorId);
 $gateway->setVendorAuthcode($vendorAuthcode);
@@ -148,7 +150,12 @@ if (!isset($_POST['tid'])) {
 
 ## Available Payment Methods
 
+### Xml Gateway
+
 * 0 - Direct Debit SEPA
+
+### Redirect Gateway
+
 * 33 - Online Transfer Sofort
 * 49 - Online Transfer iDEAL
 * 69 - Online bank transfer (giropay)

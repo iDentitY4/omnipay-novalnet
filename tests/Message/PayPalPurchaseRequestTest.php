@@ -2,7 +2,7 @@
 
 namespace Omnipay\Novalnet\Tests\Message;
 
-use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\AbstractGateway;
 use Omnipay\Novalnet\Message\PurchaseRequestPayPal;
 
 class PayPalPurchaseRequestTest extends AbstractPurchaseRequestTest
@@ -14,7 +14,7 @@ class PayPalPurchaseRequestTest extends AbstractPurchaseRequestTest
 
     protected function getPaymentMethod()
     {
-        return Gateway::PAYPAL_METHOD;
+        return AbstractGateway::PAYPAL_METHOD;
     }
 
     protected function getRedirectUrl()

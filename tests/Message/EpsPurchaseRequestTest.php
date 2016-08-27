@@ -2,7 +2,7 @@
 
 namespace Omnipay\Novalnet\Tests\Message;
 
-use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\AbstractGateway;
 use Omnipay\Novalnet\Message\PurchaseRequestEps;
 
 class EpsPurchaseRequestTest extends AbstractPurchaseRequestTest
@@ -14,7 +14,7 @@ class EpsPurchaseRequestTest extends AbstractPurchaseRequestTest
 
     protected function getPaymentMethod()
     {
-        return Gateway::EPS_METHOD;
+        return AbstractGateway::EPS_METHOD;
     }
 
     protected function getRedirectUrl()

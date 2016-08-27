@@ -2,7 +2,7 @@
 
 namespace Omnipay\Novalnet\Tests\Message;
 
-use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\AbstractGateway;
 use Omnipay\Novalnet\Message\PurchaseRequestGiropay;
 
 class GiropayPurchaseRequestTest extends AbstractPurchaseRequestTest
@@ -14,7 +14,7 @@ class GiropayPurchaseRequestTest extends AbstractPurchaseRequestTest
 
     protected function getPaymentMethod()
     {
-        return Gateway::GIROPAY_METHOD;
+        return AbstractGateway::GIROPAY_METHOD;
     }
 
     protected function getRedirectUrl()

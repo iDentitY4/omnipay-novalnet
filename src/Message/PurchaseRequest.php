@@ -3,7 +3,7 @@
 namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\AbstractGateway;
 
 /**
  * Novalnet Base Purchase Request
@@ -67,7 +67,6 @@ class PurchaseRequest extends AbstractRequest
             'city' => $card->getBillingCity(),
             'country' => $card->getBillingCountry(),
             'country_code' => $card->getBillingCountry(),
-            'lang' => strtolower($card->getBillingCountry()),
             'email' => $card->getEmail(),
             'mobile' => $card->getBillingPhone(),
             'tel' => $card->getBillingPhone(),
@@ -75,7 +74,7 @@ class PurchaseRequest extends AbstractRequest
             'birth_date' => $card->getBirthday(),
         );
 
-        if ($this->getPaymentMethod() != Gateway::ALL_METHODS) {
+        if ($this->getPaymentMethod() != AbstractGateway::ALL_METHODS) {
             $data['key'] = $this->getPaymentMethod();
 
             if ($this->getChosenOnly()) {
@@ -282,14 +281,14 @@ class PurchaseRequest extends AbstractRequest
     public function getPaymentMethods()
     {
         return array(
-            Gateway::SEPA_METHOD => 'SEPA',
-            Gateway::CREDITCARD_METHOD => 'Creditcard',
-            Gateway::ONLINE_TRANSFER_METHOD => 'Online Transfer (Sofort)',
-            Gateway::PAYPAL_METHOD => 'PayPal',
-            Gateway::IDEAL_METHOD => 'iDEAL',
-            Gateway::EPS_METHOD => 'eps',
-            Gateway::GIROPAY_METHOD => 'giropay',
-            Gateway::ALL_METHODS => 'make user choose',
+            AbstractGateway::SEPA_METHOD => 'SEPA',
+            AbstractGateway::CREDITCARD_METHOD => 'Creditcard',
+            AbstractGateway::ONLINE_TRANSFER_METHOD => 'Online Transfer (Sofort)',
+            AbstractGateway::PAYPAL_METHOD => 'PayPal',
+            AbstractGateway::IDEAL_METHOD => 'iDEAL',
+            AbstractGateway::EPS_METHOD => 'eps',
+            AbstractGateway::GIROPAY_METHOD => 'giropay',
+            AbstractGateway::ALL_METHODS => 'make user choose',
         );
     }
 

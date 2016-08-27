@@ -2,7 +2,7 @@
 
 namespace Omnipay\Novalnet\Tests\Message;
 
-use Omnipay\Novalnet\Gateway;
+use Omnipay\Novalnet\AbstractGateway;
 use Omnipay\Novalnet\Message\PurchaseRequestIdeal;
 
 class IdealPurchaseRequestTest extends AbstractPurchaseRequestTest
@@ -14,7 +14,7 @@ class IdealPurchaseRequestTest extends AbstractPurchaseRequestTest
 
     protected function getPaymentMethod()
     {
-        return Gateway::IDEAL_METHOD;
+        return AbstractGateway::IDEAL_METHOD;
     }
 
     protected function getRedirectUrl()
