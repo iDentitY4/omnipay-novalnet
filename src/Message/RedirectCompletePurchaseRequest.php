@@ -2,6 +2,7 @@
 
 namespace Omnipay\Novalnet\Message;
 
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\InvalidResponseException;
 use SimpleXMLElement;
 
@@ -45,6 +46,15 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
      */
     public function sendData($data)
     {
+
+        if ($this->httpRequest->get('payment_error')) {
+
+            throw new InvalidRequestException(
+                'Error: ' . $this->httpRequest->get('payment_error') .': ' .
+                $this->httpRequest->get('status') . ' - ' .
+                $this->httpRequest->get('status_text')
+            );
+        }
         // build xml
         $xml = new SimpleXMLElement('<nnxml></nnxml>');
         $subElement = $xml->addChild('info_request');

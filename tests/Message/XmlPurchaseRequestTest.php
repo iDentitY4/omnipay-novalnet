@@ -29,7 +29,6 @@ class XmlPurchaseRequestTest extends TestCase
         $this->request->setVendorAuthcode('JyEtHUjjbHNJwVztW6JrafIMHQvici');
         $this->request->setProductId(14);
         $this->request->setTariffId(30);
-        $this->request->setPaymentMethod(0);
 
         $this->request->setAmount('5.22');
         $this->request->setTransactionId('Test23423');

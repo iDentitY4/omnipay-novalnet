@@ -29,6 +29,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             $data['cc_exp_year'] = $card->getExpiryYear();
             $data['cc_cvc2'] = $card->getCvv();
             $data['cc_holder'] = $card->getBillingFirstName() . ' ' . $card->getBillingLastName();
+
         }
 
         return $data;
@@ -134,10 +135,12 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
 
     public function shouldEncode()
     {
-        if ( ! $this->getPaymentMethod() || RedirectGateway::CREDITCARD_METHOD == $this->getPaymentMethod()) {
+        if ($this->getChosenOnly() || !$this->getPaymentMethod() ||
+            $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD
+        ) {
             return false;
         }
 
-        return true;
+        return false;
     }
 }

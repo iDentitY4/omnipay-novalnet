@@ -72,9 +72,8 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
             'birth_date' => $card->getBirthday(),
         );
 
-        if ($this->getPaymentMethod() != AbstractGateway::ALL_METHODS) {
+        if ($this->getPaymentMethod()) {
             $data['key'] = $this->getPaymentMethod();
-
             if ($this->getChosenOnly()) {
                 $data['chosen_only'] = true;
             }
