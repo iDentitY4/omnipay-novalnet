@@ -58,7 +58,7 @@ class RedirectGatewayTest extends GatewayTestCase
     public function testPurchaseCreditCard()
     {
         /** @var \Omnipay\Novalnet\Message\RedirectPurchaseRequest $request */
-        $request = $this->gateway->purchase();
+        $request = $this->gateway->purchase(['paymentMethod' => RedirectGateway::CREDITCARD_METHOD]);
 
         $this->assertInstanceOf('\Omnipay\Novalnet\Message\RedirectPurchaseRequest', $request);
 
@@ -68,6 +68,6 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertEquals(14, $request->getProductId());
         $this->assertEquals(30, $request->getTariffId());
         $this->assertEquals(true, $request->getTestMode());
-        $this->assertEquals(99, $request->getPaymentMethod());
+        $this->assertEquals(RedirectGateway::CREDITCARD_METHOD, $request->getPaymentMethod());
     }
 }

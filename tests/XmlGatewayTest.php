@@ -54,6 +54,6 @@ class XmlGatewayTest extends GatewayTestCase
         $this->assertEquals(14, $request->getProductId());
         $this->assertEquals(30, $request->getTariffId());
         $this->assertEquals(true, $request->getTestMode());
-        $this->assertEquals(99, $request->getPaymentMethod());
+        $this->assertNull($request->getPaymentMethod());
     }
 }

@@ -36,7 +36,7 @@ abstract class AbstractGateway extends CommonAbstractGateway
             'productId' => 14,
             'tariffId' => 30,
             'testMode' => true,
-            'paymentMethod' => self::ALL_METHODS,
+            'paymentMethod' => null,
         );
     }
 
