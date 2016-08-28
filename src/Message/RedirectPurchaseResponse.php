@@ -4,7 +4,7 @@ namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Message\RedirectResponseInterface;
 
-class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
+class RedirectPurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
     public function isRedirect()
     {
@@ -18,7 +18,7 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
      */
     public function getRedirectUrl()
     {
-        return $this->request->endpoint;
+        return $this->request->getEndpoint();
     }
 
     /**

@@ -2,17 +2,16 @@
 
 namespace Omnipay\Novalnet;
 
-use Omnipay\Novalnet\Message\CompletePurchaseRequest;
-use Omnipay\Novalnet\Message\PurchaseRequestAll;
-use Omnipay\Novalnet\Message\PurchaseRequestCreditcard;
-use Omnipay\Novalnet\Message\PurchaseRequestEps;
-use Omnipay\Novalnet\Message\PurchaseRequestGiropay;
-use Omnipay\Novalnet\Message\PurchaseRequestIdeal;
-use Omnipay\Novalnet\Message\PurchaseRequestPayPal;
-use Omnipay\Novalnet\Message\PurchaseRequestSepa;
 
 class RedirectGateway extends AbstractGateway
 {
+    const CREDITCARD_METHOD = 6;
+    const ONLINE_TRANSFER_METHOD = 33;
+    const PAYPAL_METHOD = 34;
+    const IDEAL_METHOD = 49;
+    const EPS_METHOD = 50;
+    const GIROPAY_METHOD = 69;
+
     /**
      * {@inheritdoc}
      */
@@ -30,11 +29,7 @@ class RedirectGateway extends AbstractGateway
      */
     public function purchase(array $parameters = array())
     {
-        if (!$this->getChosenOnly()) {
-            return $this->determineRequest($parameters);
-        }
-
-        return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestAll', $parameters);
+        return $this->createRequest('\Omnipay\Novalnet\Message\RedirectPurchaseRequest', $parameters);
     }
 
     /**
@@ -46,27 +41,7 @@ class RedirectGateway extends AbstractGateway
      */
     public function completePurchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Novalnet\Message\CompletePurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest', $parameters);
     }
 
-    private function determineRequest(array $parameters = array())
-    {
-        if (self::GIROPAY_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestGiropay', $parameters);
-        }
-        if (in_array($this->getPaymentMethod(), array(self::ONLINE_TRANSFER_METHOD, self::IDEAL_METHOD))) {
-            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestIdeal', $parameters);
-        }
-        if (self::PAYPAL_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestPayPal', $parameters);
-        }
-        if (self::EPS_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestEps', $parameters);
-        }
-        if (self::CREDITCARD_METHOD == $this->getPaymentMethod()) {
-            return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestCreditCard', $parameters);
-        }
-
-        return $this->createRequest('\Omnipay\Novalnet\Message\PurchaseRequestAll', $parameters);
-    }
 }

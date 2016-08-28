@@ -6,9 +6,9 @@ use Omnipay\Common\Exception\InvalidResponseException;
 use SimpleXMLElement;
 
 /**
- * @method CompletePurchaseResponse send()
+ * @method RedirectCompletePurchaseResponse send()
  */
-class CompletePurchaseRequest extends PurchaseRequest
+class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
 {
     public $endpoint = 'https://payport.novalnet.de/nn_infoport.xml';
 
@@ -55,11 +55,11 @@ class CompletePurchaseRequest extends PurchaseRequest
 
         // If we cannot retrieve the data from the XML API, use the request parameters
         if ($httpResponse->getContentType() !== 'text/xml') {
-            return $this->response = new CompletePurchaseResponse($this, (object) $this->httpRequest->request->all());
+            return $this->response = new RedirectCompletePurchaseResponse($this, (object) $this->httpRequest->request->all());
         }
 
         // return response
-        return $this->response = new CompletePurchaseResponse($this, $httpResponse->xml());
+        return $this->response = new RedirectCompletePurchaseResponse($this, $httpResponse->xml());
     }
 
     public function getStatusText()

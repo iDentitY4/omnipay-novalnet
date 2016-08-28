@@ -7,7 +7,7 @@ use Omnipay\Novalnet\RedirectGateway;
 use Omnipay\Novalnet\XmlGateway;
 use Omnipay\Tests\GatewayTestCase;
 
-class GatewayTest extends GatewayTestCase
+class RedirectGatewayTest extends GatewayTestCase
 {
     public function getValidCard()
     {
@@ -41,44 +41,26 @@ class GatewayTest extends GatewayTestCase
 
     public function testPurchase()
     {
-        /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
+        /** @var \Omnipay\Novalnet\Message\RedirectPurchaseRequest $request */
         $request = $this->gateway->purchase();
 
-        $this->assertInstanceOf('\Omnipay\Novalnet\Message\PurchaseRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Novalnet\Message\RedirectPurchaseRequest', $request);
     }
 
     public function testCompletePurchase()
     {
-        /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
+        /** @var \Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest $request */
         $request = $this->gateway->completePurchase();
 
-        $this->assertInstanceOf('\Omnipay\Novalnet\Message\CompletePurchaseRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest', $request);
     }
 
     public function testPurchaseCreditCard()
     {
-        /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
+        /** @var \Omnipay\Novalnet\Message\RedirectPurchaseRequest $request */
         $request = $this->gateway->purchase();
 
-        $this->assertInstanceOf('\Omnipay\Novalnet\Message\PurchaseRequest', $request);
-
-        // default options
-        $this->assertEquals(4, $request->getVendorId());
-        $this->assertEquals('JyEtHUjjbHNJwVztW6JrafIMHQvici', $request->getVendorAuthcode());
-        $this->assertEquals(14, $request->getProductId());
-        $this->assertEquals(30, $request->getTariffId());
-        $this->assertEquals(true, $request->getTestMode());
-        $this->assertEquals(99, $request->getPaymentMethod());
-    }
-
-    public function testPurchaseSepa()
-    {
-        $this->gateway = new XmlGateway($this->getHttpClient(), $this->getHttpRequest());
-
-        /** @var \Omnipay\Novalnet\Message\PurchaseRequest $request */
-        $request = $this->gateway->purchase();
-
-        $this->assertInstanceOf('\Omnipay\Novalnet\Message\PurchaseRequestSepa', $request);
+        $this->assertInstanceOf('\Omnipay\Novalnet\Message\RedirectPurchaseRequest', $request);
 
         // default options
         $this->assertEquals(4, $request->getVendorId());

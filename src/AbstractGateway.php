@@ -4,24 +4,17 @@ namespace Omnipay\Novalnet;
 
 use Omnipay\Common\AbstractGateway as CommonAbstractGateway;
 
-use Omnipay\Novalnet\Message\CompletePurchaseRequest;
-use Omnipay\Novalnet\Message\PurchaseRequestAll;
-use Omnipay\Novalnet\Message\PurchaseRequestCreditcard;
-use Omnipay\Novalnet\Message\PurchaseRequestEps;
-use Omnipay\Novalnet\Message\PurchaseRequestGiropay;
-use Omnipay\Novalnet\Message\PurchaseRequestIdeal;
-use Omnipay\Novalnet\Message\PurchaseRequestPayPal;
-use Omnipay\Novalnet\Message\PurchaseRequestSepa;
-
 abstract class AbstractGateway extends CommonAbstractGateway
 {
-    const EPS_METHOD = 50;
     const CREDITCARD_METHOD = 6;
-    const GIROPAY_METHOD = 69;
-    const IDEAL_METHOD = 49;
+    CONST INVOICE_PREPAID_METHOD = 27;
     const ONLINE_TRANSFER_METHOD = 33;
+    const IDEAL_METHOD = 49;
+    const EPS_METHOD = 50;
+    const SEPA_METHOD = 55;
+    const GIROPAY_METHOD = 69;
     const PAYPAL_METHOD = 34;
-    const SEPA_METHOD = 0;
+
     const ALL_METHODS = 99;
 
     /**

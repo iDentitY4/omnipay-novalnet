@@ -8,7 +8,7 @@ use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Novalnet\Message\CompletePurchaseResponse;
 use Omnipay\Tests\TestCase;
 
-class CompletePurchaseResponseTest extends TestCase
+class RedirectCompletePurchaseResponseTest extends TestCase
 {
     /**
      * Set up the CompletePurchaseResponseTest sandbox.
@@ -21,7 +21,7 @@ class CompletePurchaseResponseTest extends TestCase
         $request->query->set('order_no', '12345678');
 
         $arguments = array($this->getHttpClient(), $request);
-        $this->request = m::mock('Omnipay\Novalnet\Message\CompletePurchaseRequest[getEndpoint]', $arguments);
+        $this->request = m::mock('Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest[getEndpoint]', $arguments);
     }
 
     public function testInvalidTransactionId()
@@ -43,7 +43,7 @@ class CompletePurchaseResponseTest extends TestCase
     protected function hasValidTransactionId(array $arguments)
     {
         try {
-            $response = m::mock('Omnipay\Novalnet\Message\CompletePurchaseResponse[getEndpoint]', $arguments);
+            $response = m::mock('Omnipay\Novalnet\Message\RedirectCompletePurchaseResponse[getEndpoint]', $arguments);
         } catch (InvalidResponseException $exception) {
             return false;
         }

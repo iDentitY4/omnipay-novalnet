@@ -4,9 +4,12 @@ namespace Omnipay\Novalnet\Message;
 
 use SimpleXMLElement;
 
-class PurchaseRequestSepa extends PurchaseRequest
+class XmlPurchaseRequest extends AbstractPurchaseRequest
 {
-    public $endpoint = 'https://payport.novalnet.de/payport.xml';
+    public function getEndpoint()
+    {
+        return 'https://payport.novalnet.de/payport.xml';
+    }
 
     /**
      * {@inheritdoc}
@@ -44,10 +47,10 @@ class PurchaseRequestSepa extends PurchaseRequest
         $this->arrayToXml($data, $subElement);
 
         // send request
-        $httpResponse = $this->httpClient->post($this->endpoint, null, $xml->asXML())->send();
+        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $xml->asXML())->send();
 
         // return response
-        return $this->response = new PurchaseResponseSepa($this, $httpResponse->xml()->transaction_response);
+        return $this->response = new XmlPurchaseResponse($this, $httpResponse->xml()->transaction_response);
     }
 
     public function shouldRedirect()

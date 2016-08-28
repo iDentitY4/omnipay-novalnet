@@ -4,20 +4,19 @@ namespace Omnipay\Novalnet\Tests\Message;
 
 use Mockery as m;
 use Omnipay\Common\CreditCard;
-use Omnipay\Novalnet\Message\PurchaseRequestSepa;
+use Omnipay\Novalnet\Message\XmlPurchaseRequest;
 use Omnipay\Novalnet\Tests\TestCase;
 
-class SepaPurchaseRequestTest extends TestCase
+class XmlPurchaseRequestTest extends TestCase
 {
     /**
-     * @var PurchaseRequestSepa
+     * @var XmlPurchaseRequest
      */
     private $request;
 
     protected function setUp()
     {
-        $arguments = array($this->getHttpClient(), $this->getHttpRequest());
-        $this->request = m::mock('Omnipay\Novalnet\Message\PurchaseRequestSepa[getEndpoint]', $arguments);
+        $this->request = new XmlPurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
         $this->request->setTestMode(true);
 
         $card = new CreditCard($this->getValidCard());

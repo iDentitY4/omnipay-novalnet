@@ -2,7 +2,7 @@
 
 namespace Omnipay\Novalnet\Message;
 
-class PurchaseResponseSepa extends AbstractResponse
+class XmlPurchaseResponse extends AbstractResponse
 {
     public function getAmount()
     {

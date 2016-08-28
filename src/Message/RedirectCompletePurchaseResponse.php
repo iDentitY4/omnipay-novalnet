@@ -5,7 +5,7 @@ namespace Omnipay\Novalnet\Message;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\RequestInterface;
 
-class CompletePurchaseResponse extends AbstractResponse
+class RedirectCompletePurchaseResponse extends AbstractResponse
 {
 
     /**

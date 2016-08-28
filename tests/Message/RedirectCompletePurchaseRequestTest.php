@@ -5,12 +5,13 @@ namespace Omnipay\Novalnet\Tests\Message;
 use Mockery as m;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Novalnet\Message\CompletePurchaseRequest;
+use Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest;
 use Omnipay\Tests\TestCase;
 
-class CompletePurchaseRequestTest extends TestCase
+class RedirectCompletePurchaseRequestTest extends TestCase
 {
     /**
-     * @var \Omnipay\Novalnet\Message\CompletePurchaseRequest
+     * @var \Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest
      */
     protected $request;
 
@@ -25,7 +26,7 @@ class CompletePurchaseRequestTest extends TestCase
         $request->query->set('order_no', '12345678');
 
         $arguments = array($this->getHttpClient(), $request);
-        $this->request = m::mock('Omnipay\Novalnet\Message\CompletePurchaseRequest[getEndpoint]', $arguments);
+        $this->request = m::mock('Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest[getEndpoint]', $arguments);
         $this->request = $this->request->setVendorId(4);
         $this->request = $this->request->setVendorAuthcode('JyEtHUjjbHNJwVztW6JrafIMHQvici');
         $this->request = $this->request->setProductId('14');
@@ -58,7 +59,7 @@ class CompletePurchaseRequestTest extends TestCase
      *
      * @return $this
      */
-    protected function initializeRequest()
+    protected function initializeRequest($paymentMethod = null)
     {
         $options = array(
             'vendorId' => 4,
@@ -66,7 +67,7 @@ class CompletePurchaseRequestTest extends TestCase
             'productId' => 14,
             'tariffId' => 30,
             'testMode' => 1,
-            'paymentMethod' => $this->paymentMethod,
+            'paymentMethod' => $paymentMethod,
 
             'amount' => 10.21,
             'currency' => 'EUR',
@@ -100,7 +101,7 @@ class CompletePurchaseRequestTest extends TestCase
 
     protected function getRequest()
     {
-        return new CompletePurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        return new RedirectCompletePurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
     }
 
 

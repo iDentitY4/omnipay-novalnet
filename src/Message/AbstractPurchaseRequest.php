@@ -4,23 +4,22 @@ namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Novalnet\AbstractGateway;
+use Omnipay\Novalnet\RedirectGateway;
+use Omnipay\Novalnet\XmlGateway;
 
 /**
- * Novalnet Base Purchase Request
+ * Novalnet Abstract Purchase Request
  *
- * @method PurchaseResponse send()
  */
-class PurchaseRequest extends AbstractRequest
+abstract class AbstractPurchaseRequest extends AbstractRequest
 {
-    public $endpoint;
-
     /**
      * {@inheritdoc}
      */
     public function getData()
     {
         $this->validate(
-            // general
+        // general
             'vendorId',
             'vendorAuthcode',
             'productId',
@@ -28,7 +27,6 @@ class PurchaseRequest extends AbstractRequest
             'amount',
             'currency',
             'transactionId',
-            'paymentMethod',
             // customer
             'card'
         );
@@ -152,10 +150,36 @@ class PurchaseRequest extends AbstractRequest
         }
 
         // send request
-        $httpResponse = $this->httpClient->post($this->endpoint, null, $data)->send();
+        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
 
         // return response
-        return $this->response = new PurchaseResponse($this, $httpResponse->json());
+        return $this->response = new RedirectPurchaseResponse($this, $httpResponse->json());
+    }
+
+    public function getEndpoint()
+    {
+        switch($this->getPaymentMethod()) {
+            case RedirectGateway::GIROPAY_METHOD:
+                $endpoint = 'https://payport.novalnet.de/giropay';
+                break;
+            case RedirectGateway::IDEAL_METHOD:
+            case RedirectGateway::ONLINE_TRANSFER_METHOD:
+                $endpoint = 'https://payport.novalnet.de/online_transfer_payport';
+                break;
+            case RedirectGateway::PAYPAL_METHOD:
+                $endpoint = 'https://payport.novalnet.de/paypal_payport';
+                break;
+            case RedirectGateway::EPS_METHOD:
+                $endpoint = 'https://payport.novalnet.de/eps_payport';
+                break;
+            case RedirectGateway::CREDITCARD_METHOD:
+                $endpoint = 'https://payport.novalnet.de/global_pci_payport';
+                break;
+            default:
+                $endpoint = 'https://payport.novalnet.de/nn/paygate.jsp';
+        }
+
+        return $endpoint;
     }
 
     public function getDays()
@@ -281,14 +305,13 @@ class PurchaseRequest extends AbstractRequest
     public function getPaymentMethods()
     {
         return array(
-            AbstractGateway::SEPA_METHOD => 'SEPA',
-            AbstractGateway::CREDITCARD_METHOD => 'Creditcard',
-            AbstractGateway::ONLINE_TRANSFER_METHOD => 'Online Transfer (Sofort)',
-            AbstractGateway::PAYPAL_METHOD => 'PayPal',
-            AbstractGateway::IDEAL_METHOD => 'iDEAL',
-            AbstractGateway::EPS_METHOD => 'eps',
-            AbstractGateway::GIROPAY_METHOD => 'giropay',
-            AbstractGateway::ALL_METHODS => 'make user choose',
+            XmlGateway::SEPA_METHOD => 'SEPA',
+            XmlGateway::CREDITCARD_METHOD => 'Creditcard',
+            XmlGateway::ONLINE_TRANSFER_METHOD => 'Online Transfer (Sofort)',
+            XmlGateway::PAYPAL_METHOD => 'PayPal',
+            XmlGateway::IDEAL_METHOD => 'iDEAL',
+            XmlGateway::EPS_METHOD => 'eps',
+            XmlGateway::GIROPAY_METHOD => 'giropay',
         );
     }
 
@@ -406,7 +429,7 @@ class PurchaseRequest extends AbstractRequest
             'test_mode' => $test_mode,
             'uniqid' => $uniqid,
         ), $password);
-        
+
         return array($auth_code, $product_id, $tariff_id, $amount, $test_mode, $uniqid, $hash);
     }
 

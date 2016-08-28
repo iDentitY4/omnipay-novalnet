@@ -2,12 +2,14 @@
 
 namespace Omnipay\Novalnet\Tests\Message;
 
+use Omnipay\Novalnet\Message\RedirectPurchaseRequest;
+use Omnipay\Novalnet\RedirectGateway;
 use Omnipay\Tests\TestCase;
 
-abstract class AbstractPurchaseRequestTest extends TestCase
+class RedirectPurchaseRequestTest extends TestCase
 {
     /**
-     * @var \Omnipay\Novalnet\Message\PurchaseRequest
+     * @var \Omnipay\Novalnet\Message\RedirectPurchaseRequest
      */
     protected $request;
     protected $paymentMethod;
@@ -20,9 +22,7 @@ abstract class AbstractPurchaseRequestTest extends TestCase
     {
         parent::setUp();
 
-        $this->request = $this->getRequest();
-        $this->paymentMethod = $this->getPaymentMethod();
-        $this->redirectUrl = $this->getRedirectUrl();
+        $this->request = new RedirectPurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
     }
 
     /**
@@ -32,10 +32,9 @@ abstract class AbstractPurchaseRequestTest extends TestCase
     {
         $response = $this->initializeRequest()->send();
 
-        $this->assertInstanceOf('Omnipay\Novalnet\Message\PurchaseResponse', $response);
+        $this->assertInstanceOf('Omnipay\Novalnet\Message\RedirectPurchaseResponse', $response);
         $this->assertFalse($response->isSuccessful());
         $this->assertTrue($response->isRedirect());
-        $this->assertContains($this->redirectUrl, $response->getRedirectUrl());
     }
 
 
@@ -44,7 +43,7 @@ abstract class AbstractPurchaseRequestTest extends TestCase
      *
      * @return $this
      */
-    protected function initializeRequest()
+    protected function initializeRequest($paymentMethod = null)
     {
         $options = array(
             'vendorId' => 4,
@@ -52,7 +51,7 @@ abstract class AbstractPurchaseRequestTest extends TestCase
             'productId' => 14,
             'tariffId' => 30,
             'testMode' => 1,
-            'paymentMethod' => $this->paymentMethod,
+            'paymentMethod' => $paymentMethod,
 
             'amount' => 10.21,
             'currency' => 'EUR',
@@ -84,7 +83,29 @@ abstract class AbstractPurchaseRequestTest extends TestCase
         return $this->request->initialize($options);
     }
 
-    abstract protected function getRequest();
-    abstract protected function getPaymentMethod();
-    abstract protected function getRedirectUrl();
+    /**
+     * @dataProvider endpointProvider
+     */
+    public function testEndpoints($paymentMethod, $endpointUrl)
+    {
+        $request = $this->initializeRequest($paymentMethod);
+        $this->assertEquals($endpointUrl, $request->getEndpoint());
+
+        $response = $request->send();
+        $this->assertContains($endpointUrl, $response->getRedirectUrl());
+        $this->assertTrue($response->isRedirect());
+    }
+
+    public function endpointProvider()
+    {
+        return array(
+            array(null, 'https://payport.novalnet.de/nn/paygate.jsp'),
+            array(RedirectGateway::GIROPAY_METHOD, 'https://payport.novalnet.de/giropay'),
+            array(RedirectGateway::IDEAL_METHOD, 'https://payport.novalnet.de/online_transfer_payport'),
+            array(RedirectGateway::ONLINE_TRANSFER_METHOD, 'https://payport.novalnet.de/online_transfer_payport'),
+            array(RedirectGateway::PAYPAL_METHOD, 'https://payport.novalnet.de/paypal_payport'),
+            array(RedirectGateway::EPS_METHOD, 'https://payport.novalnet.de/eps_payport'),
+            array(RedirectGateway::CREDITCARD_METHOD, 'https://payport.novalnet.de/global_pci_payport'),
+        );
+    }
 }
