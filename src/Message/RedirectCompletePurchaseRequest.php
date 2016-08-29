@@ -60,7 +60,7 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
         if ($this->shouldEncode()) {
             $validHash = RedirectEncode::checkHash((array) $postData, $this->getPaymentKey());
             if (!$validHash) {
-                throw new InvalidResponseException('Invalid hash');
+                throw new InvalidResponseException('Invalid hash - ' . (isset($postData['status_text']) ? $postData['status_text'] : ''));
             }
 
             return new RedirectCompletePurchaseResponse($this, (object) $postData);

@@ -80,7 +80,7 @@ class RedirectEncode
      */
     public static function checkHash(array $response, $password)
     {
-        if (!$response) {
+        if (!$response || !isset($response['auth_code']) || !isset($response['product'])) {
             return false;
         }
 
