@@ -165,15 +165,6 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
         return $this->setParameter('cancelMethod', $value);
     }
 
-    public function getChosenOnly()
-    {
-        return $this->getParameter('chosenOnly');
-    }
-
-    public function setChosenOnly($value)
-    {
-        return $this->setParameter('chosenOnly', $value);
-    }
 
     protected function validateCard($parameters = array())
     {

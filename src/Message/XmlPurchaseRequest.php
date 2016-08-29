@@ -36,7 +36,6 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             'billingCity',
             'billingCountry',
             'email',
-            'phone',
         ));
 
         /** @var \Omnipay\Common\CreditCard $card */
@@ -82,7 +81,8 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
 
             $data['payment_details'] = array(
                 'iban' => $this->getIban(),
-                'bankaccount_holder' => $card->getBillingFirstName() . ' ' . $card->getBillingLastName(),
+                'bic' => $this->getBic(),
+                'bankaccount_holder' => $this->getBankaccountHolder() ?: $card->getBillingName(),
                 'mandate_ref' => $this->getMandidateRef(),
             );
         }
@@ -99,9 +99,28 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
                 'cc_holder' => $card->getBillingName()
             );
         }
-
-
+        
         return $data;
+    }
+
+    public function getBic()
+    {
+        return $this->getParameter('bic');
+    }
+
+    public function setBic($value)
+    {
+        return $this->setParameter('bic', $value);
+    }
+
+    public function getBankaccountHolder()
+    {
+        return $this->getParameter('bankaccountHolder');
+    }
+
+    public function setBankaccountHolder($value)
+    {
+        return $this->setParameter('bankaccountHolder', $value);
     }
 
     /**

@@ -187,36 +187,6 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
         return $endpoint;
     }
 
-    public function setPaymentMethod($value)
-    {
-        return $this->setParameter('paymentMethod', $value);
-    }
-
-    public function getPaymentMethod()
-    {
-        return $this->getParameter('paymentMethod');
-    }
-
-
-    public function getReturnMethod()
-    {
-        return $this->getParameter('returnMethod');
-    }
-
-    public function setReturnMethod($value)
-    {
-        return $this->setParameter('returnMethod', $value);
-    }
-
-    public function getCancelMethod()
-    {
-        return $this->getParameter('cancelMethod');
-    }
-
-    public function setCancelMethod($value)
-    {
-        return $this->setParameter('cancelMethod', $value);
-    }
 
     public function getChosenOnly()
     {
