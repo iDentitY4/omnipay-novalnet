@@ -56,7 +56,7 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             'test_mode' => $this->getTestMode(),
 
             // customer details
-            'customer' => [
+            'customer' => array(
                 'remote_ip' => $this->httpRequest->getClientIp(),
                 'firstname' => $card->getBillingFirstName(),
                 'lastname' => $card->getBillingLastName(),
@@ -71,7 +71,7 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
                 'tel' => $card->getBillingPhone(),
                 'fax' => $card->getFax(),
                 'birth_date' => $card->getBirthday(),
-            ],
+            ),
         );
 
         if ($this->getPaymentMethod() == XmlGateway::DIRECT_DEBIT_SEPA_METHOD) {
