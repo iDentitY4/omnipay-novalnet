@@ -2,7 +2,6 @@
 
 namespace Omnipay\Novalnet;
 
-
 use Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest;
 
 class RedirectGateway extends AbstractGateway
@@ -45,5 +44,4 @@ class RedirectGateway extends AbstractGateway
     {
         return $this->createRequest('\Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest', $parameters);
     }
-
 }

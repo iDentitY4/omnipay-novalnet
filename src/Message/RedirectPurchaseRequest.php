@@ -162,7 +162,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
         }
 
         // Determine endpiint based on endpoint
-        switch($this->getPaymentMethod()) {
+        switch ($this->getPaymentMethod()) {
             case RedirectGateway::GIROPAY_METHOD:
                 $endpoint = 'https://payport.novalnet.de/giropay';
                 break;

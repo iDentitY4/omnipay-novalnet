@@ -2,14 +2,14 @@
 
 namespace Omnipay\Novalnet\Helpers;
 
-
 /**
  * Based on the Novalnet Documentation example
  *
  * Class RedirectEncode
  * @package Omnipay\Novalnet\Helpers
  */
-class RedirectEncode {
+class RedirectEncode
+{
 
     public static function encode($data, $password)
     {

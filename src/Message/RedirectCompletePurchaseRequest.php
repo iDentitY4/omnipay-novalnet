@@ -48,7 +48,6 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
     {
 
         if ($this->httpRequest->get('tid_status') !== 100) {
-
             throw new InvalidRequestException(
                 'Error: ' . $this->httpRequest->get('payment_error') .': ' .
                 $this->httpRequest->get('status') . ' - ' .

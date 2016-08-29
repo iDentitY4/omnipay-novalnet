@@ -7,7 +7,7 @@ use Omnipay\Common\AbstractGateway as CommonAbstractGateway;
 abstract class AbstractGateway extends CommonAbstractGateway
 {
     const CREDITCARD_METHOD = 6;
-    CONST INVOICE_PREPAID_METHOD = 27;
+    const INVOICE_PREPAID_METHOD = 27;
     const ONLINE_TRANSFER_METHOD = 33;
     const IDEAL_METHOD = 49;
     const EPS_METHOD = 50;
