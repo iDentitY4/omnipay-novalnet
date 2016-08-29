@@ -4,33 +4,10 @@ namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\RequestInterface;
+use Omnipay\Novalnet\Helpers\RedirectEncode;
 
 class RedirectCompletePurchaseResponse extends AbstractResponse
 {
-
-    /**
-     * Constructor
-     *
-     * @param RequestInterface $request the initiating request.
-     * @param mixed            $data
-     *
-     * @throws InvalidResponseException
-     */
-    public function __construct(RequestInterface $request, $data)
-    {
-        $this->request = $request;
-        $this->data = $data;
-
-        $originalTransactionId = (string) $this->request->getTransactionId();
-        $transactionId = (string) $this->getTransactionId();
-
-        if ($originalTransactionId && $transactionId && $transactionId !== $originalTransactionId) {
-            throw new InvalidResponseException(
-                'The transactionId in the parameters ('.$originalTransactionId.') '.
-                'does not match the transactionId from the gateway: ' . $transactionId
-            );
-        }
-    }
 
     /**
      * {@inheritdoc}
@@ -45,8 +22,8 @@ class RedirectCompletePurchaseResponse extends AbstractResponse
      */
     public function getMessage()
     {
-        if (isset($this->data->transaction_status) && isset($this->data->transaction_status->status_message)) {
-            return (string) $this->data->transaction_status->status_message;
+        if (isset($this->data->status_text)) {
+            return (string) $this->data->status_text;
         }
 
         return null;

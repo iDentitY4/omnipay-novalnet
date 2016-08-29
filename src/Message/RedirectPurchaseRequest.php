@@ -26,7 +26,10 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'currency',
             'transactionId',
             'card',
-            'paymentKey'
+            'paymentKey',
+            'returnUrl',
+            'cancelUrl',
+            'notifyUrl'
         );
 
         $this->validateCard(array(
@@ -40,43 +43,58 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'phone',
         ));
 
+        if (! $this->getUniqId()) {
+            $this->setUniqId(uniqid($this->getTransactionId()));
+        }
+
         /** @var \Omnipay\Common\CreditCard $card */
         $card = $this->getCard();
         $data = array(
-            'currency' => $this->getCurrency(),
-            'order_no' => $this->getTransactionId(),
-            'lang' => $this->getLocale() ?: 'EN',
+            'utf8' => 1,
+            'use_utf8' => 1,
             'test_mode' => $this->getTestMode(),
-            'skip_cfm' => true,
-            'skip_suc' => true,
+            'vendor' => $this->getVendorId(),
+            'product' => $this->getProductId(),
+            'key' => $this->getPaymentMethod(),
+            'tariff' => $this->getTariffId(),
+            'auth_code' => $this->getVendorAuthcode(),
+            'currency' => $this->getCurrency(),
+            'amount' => $this->getAmountInteger(),
 
             // customer details
-            'remote_ip' => $this->httpRequest->getClientIp(),
             'first_name' => $card->getBillingFirstName(),
             'last_name' => $card->getBillingLastName(),
+            'email' => $card->getEmail(),
             'street' => $card->getBillingAddress1(),
             'search_in_street' => 1,
-            'zip' => $card->getBillingPostcode(),
             'city' => $card->getBillingCity(),
+            'zip' => $card->getBillingPostcode(),
             'country' => $card->getBillingCountry(),
             'country_code' => $card->getBillingCountry(),
-            'email' => $card->getEmail(),
-            'mobile' => $card->getBillingPhone(),
+            'gender' => $card->getGender() ?: 'u',
+            'lang' => $this->getLocale() ?: 'EN',
+            'remote_ip' => $this->httpRequest->getClientIp(),
             'tel' => $card->getBillingPhone(),
             'fax' => $card->getFax(),
             'birth_date' => $card->getBirthday(),
-            'product' => $this->getProductId(),
-            'tariff' => $this->getTariffId(),
-            'amount' => $this->getAmountInteger(),
-            'uniqid' => $this->getTransactionId(),
-            'vendor' => $this->getVendorId(),
-            'auth_code' => $this->getVendorAuthcode(),
+
+            'implementation' => 'PHP',
+            'return_url' => $this->getReturnUrl(),
+            'return_method' => $this->getReturnMethod() ?: 'POST',
+            'error_return_url' => $this->getCancelUrl(),
+            'error_return_method' => $this->getCancelMethod() ?: 'POST',
+            'notify_url' => $this->getNotifyUrl(),
+
+            'order_no' => $this->getTransactionId(),
+            'skip_cfm' => true,
+            'skip_suc' => true,
+            'uniqid' => $this->getUniqId(),
+            'mobile' => $card->getBillingPhone(),
+            'system_name' => 'SELF_DEVELOPED',
+            'system_version' => '1.0.0',
         );
 
 
-        if ($this->getPaymentMethod()) {
-            $data['key'] = $this->getPaymentMethod();
-        }
 
         // set description
         if ($description = $this->getDescription()) {
@@ -113,21 +131,6 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
         }
 
 
-        if ($this->getReturnUrl() && $this->getCancelUrl()) {
-            $data['return_url'] = $this->getReturnUrl();
-            $data['return_method'] = $this->getReturnMethod() ?: 'POST';
-            $data['error_return_url'] = $this->getCancelUrl();
-            $data['error_return_method'] = $this->getCancelMethod() ?: 'POST';
-            $data['notify_url'] = $this->getNotifyUrl();
-        } elseif (!$this->getReturnUrl() && $this->getCancelUrl()) {
-            throw new InvalidRequestException('Missing return url as parameter');
-        } elseif ($this->getReturnUrl() && !$this->getCancelUrl()) {
-            throw new InvalidRequestException('Missing cancel url as parameter');
-        } else {
-            throw new InvalidRequestException('Missing return and cancel url as parameters');
-        }
-
-
         if (! $this->getChosenOnly() &&  $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD) {
             $card->validate();
             $this->validateCard(array('cvv'));
@@ -136,7 +139,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             $data['cc_exp_month'] = $card->getExpiryMonth();
             $data['cc_exp_year'] = $card->getExpiryYear();
             $data['cc_cvc2'] = $card->getCvv();
-            $data['cc_holder'] = $card->getBillingFirstName() . ' ' . $card->getBillingLastName();
+            $data['cc_holder'] = $card->getBillingName();
         }
 
         return $data;
@@ -225,6 +228,16 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
         return $this->setParameter('chosenOnly', $value);
     }
 
+    public function getUniqId()
+    {
+        return $this->getParameter('uniqId');
+    }
+
+    public function setUniqId($value)
+    {
+        return $this->setParameter('uniqId', $value);
+    }
+
     protected function validateCard($parameters = array())
     {
         $card = $this->getCard();
@@ -236,14 +249,10 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
         }
     }
 
-    public function shouldRedirect()
-    {
-        return true;
-    }
-
     public function shouldEncode()
     {
-        if ($this->getChosenOnly() || !$this->getPaymentMethod() ||
+        if ($this->getChosenOnly() ||
+            !$this->getPaymentMethod() ||
             $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD
         ) {
             return false;

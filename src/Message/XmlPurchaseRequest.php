@@ -3,6 +3,7 @@
 namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
+use Omnipay\Novalnet\XmlGateway;
 use SimpleXMLElement;
 
 class XmlPurchaseRequest extends AbstractPurchaseRequest
@@ -41,13 +42,14 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
 
         /** @var \Omnipay\Common\CreditCard $card */
         $card = $this->getCard();
+
         $data = array(
             'vendor_id' => $this->getVendorId(),
             'vendor_authcode' => $this->getVendorAuthcode(),
             'product_id' => $this->getProductId(),
             'tariff_id' => $this->getTariffId(),
             'amount' => $this->getAmountInteger(),
-            'payment_type' => 'DIRECT_DEBIT_SEPA',
+            'payment_type' => $this->getPaymentMethod(),
             'order_no' => $this->getTransactionId(),
             'currency' => $this->getCurrency(),
             'lang' => $this->getLocale() ?: 'EN',
@@ -72,16 +74,31 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             ],
         );
 
-        if ($this->getSepaDueDate()) {
-            $data['sepa_due_date'] = $this->getSepaDueDate();
+        if ($this->getPaymentMethod() == XmlGateway::DIRECT_DEBIT_SEPA_METHOD) {
+            if ($this->getSepaDueDate()) {
+                $data['sepa_due_date'] = $this->getSepaDueDate();
+            }
+
+            $data['payment_details'] = array(
+                'iban' => $this->getIban(),
+                'bankaccount_holder' => $card->getBillingFirstName() . ' ' . $card->getBillingLastName(),
+                'mandate_ref' => $this->getMandidateRef(),
+            );
         }
 
-        $card = $this->getCard();
-        $data['payment_details'] = array(
-            'iban' => $this->getIban(),
-            'bankaccount_holder' => $card->getBillingFirstName() . ' ' . $card->getBillingLastName(),
-            'mandate_ref' => $this->getMandidateRef(),
-        );
+        if ($this->getPaymentMethod() == XmlGateway::CREDITCARD_METHOD) {
+            $card->validate();
+            $this->validateCard(array('cvv'));
+
+            $data['payment_details'] = array(
+                'cc_no' => $card->getNumber(),
+                'cc_exp_month' => $card->getExpiryMonth(),
+                'cc_exp_year' => $card->getExpiryYear(),
+                'cc_cvc2' =>  $card->getCvv(),
+                'cc_holder' => $card->getBillingName()
+            );
+        }
+
 
         return $data;
     }
@@ -98,11 +115,6 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
 
         // send request
         $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $xml->asXML())->send();
-
-        if ($httpResponse->getContentType() !== 'text/xml') {
-            var_dump($httpResponse->getBody(true));
-            throw new InvalidResponseException('Invalid response');
-        }
 
         // return response
         return $this->response = new XmlPurchaseResponse($this, $httpResponse->xml()->transaction_response);

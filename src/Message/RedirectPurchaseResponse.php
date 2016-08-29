@@ -40,4 +40,12 @@ class RedirectPurchaseResponse extends AbstractResponse implements RedirectRespo
     {
         return $this->data;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransactionReference()
+    {
+        return $this->request->getTransactionReference();
+    }
 }

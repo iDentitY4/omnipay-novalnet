@@ -4,6 +4,9 @@ namespace Omnipay\Novalnet;
 
 class XmlGateway extends AbstractGateway
 {
+    const CREDITCARD_METHOD = 'CREDITCARD';
+    const DIRECT_DEBIT_SEPA_METHOD = 'DIRECT_DEBIT_SEPA';
+
     /**
      * {@inheritdoc}
      */

@@ -4,6 +4,7 @@ namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\InvalidResponseException;
+use Omnipay\Novalnet\Helpers\RedirectEncode;
 use SimpleXMLElement;
 
 /**
@@ -46,14 +47,24 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
      */
     public function sendData($data)
     {
+        $postData = $this->httpRequest->request->all();
 
-        /*if ($this->httpRequest->get('tid_status') !== 100) {
-            throw new InvalidRequestException(
-                'Error: ' . $this->httpRequest->get('payment_error') .': ' .
-                $this->httpRequest->get('status') . ' - ' .
-                ($this->httpRequest->get('status_text') ?: $this->httpRequest->get('status_desc'))
+        if (isset($postData['payment_error'])) {
+            throw new InvalidResponseException(
+                $postData['payment_error'] . ': ' .
+                $postData['status_text'] . '(' . $postData['status'] .')'
             );
-        }*/
+        }
+
+        // For encoded parameters, check the hash
+        if ($this->shouldEncode()) {
+            $validHash = RedirectEncode::checkHash((array) $postData, $this->getPaymentKey());
+            if (!$validHash) {
+                throw new InvalidResponseException('Invalid hash');
+            }
+
+            return new RedirectCompletePurchaseResponse($this, (object) $postData);
+        }
 
         // build xml
         $xml = new SimpleXMLElement('<nnxml></nnxml>');
@@ -62,11 +73,6 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
 
         // send request
         $httpResponse = $this->httpClient->post($this->endpoint, null, $xml->asXML())->send();
-
-        // If we cannot retrieve the data from the XML API, use the request parameters
-        if ($httpResponse->getContentType() !== 'text/xml') {
-            return $this->response = new RedirectCompletePurchaseResponse($this, (object) $this->httpRequest->request->all());
-        }
 
         // return response
         return $this->response = new RedirectCompletePurchaseResponse($this, $httpResponse->xml());

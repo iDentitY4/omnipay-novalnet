@@ -91,8 +91,11 @@ class RedirectEncode
         $h['test_mode'] = $response['test_mode'];
         $h['uniqid'] = $response['uniqid'];
 
-        if ($response['hash2'] != md5($h['auth_code'] . $h['product'] . $h['tariff'] . $h['amount'] .
-                $h['test_mode'] . $h['uniqid'] . strrev($password))) {
+        if ($response['hash2'] != md5(
+            $h['auth_code'] . $h['product'] . $h['tariff'] . $h['amount'] .
+            $h['test_mode'] . $h['uniqid'] . strrev($password)
+        )
+        ) {
             return false;
         }
 

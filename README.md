@@ -35,7 +35,6 @@ For common but obscure errors check out these [errors](errors.md). If you find m
 ## Example
 
 ```php
-use Omnipay\Novalnet\XmlGateway;
 use Omnipay\Novalnet\RedirectGateway;
 
 /*
@@ -44,12 +43,28 @@ use Omnipay\Novalnet\RedirectGateway;
 $gateway = new RedirectGateway();
 //$gateway = new XmlGateway(); // For XML
 
-$gateway->setTestMode(true);
 $gateway->setVendorId($vendorId);
 $gateway->setVendorAuthcode($vendorAuthcode);
 $gateway->setProductId($productId);
 $gateway->setTariffId($tariffId);
 
+
+// Set payment method
+
+// For Redirect Gateway
+# $gateway->setPaymentMethod(RedirectGateway::GIROPAY_METHOD);
+# $gateway->setPaymentMethod(RedirectGateway::IDEAL_METHOD);
+# $gateway->setPaymentMethod(RedirectGateway::ONLINE_TRANSFER_METHOD);
+# $gateway->setPaymentMethod(RedirectGateway::EPS_METHOD);
+# $gateway->setPaymentMethod(RedirectGateway::PAYPAL_METHOD);
+# $gateway->setPaymentMethod(RedirectGateway::CREDITCARD_METHOD);
+
+// To show the Novalnet screen with only the selected method:
+$gateway->setChosenOnly();
+
+// For XML Gateway
+# $gateway->setPaymentMethod(XmlGateway::CREDITCARD_METHOD);
+# $gateway->setPaymentMethod(XmlGateway::DIRECT_DEBIT_SEPA);
 
 /*
  * 2. Define the purchase parameters
@@ -105,20 +120,6 @@ if (isset($_POST['tid'])) {
  * 3.2. Initialize purchase
  */
 if (!isset($_POST['tid'])) {
-    /*
-     * 3.2.1. Choose the desired payment method
-     */
-    // XML Gateway
-    //$gateway->setPaymentMethod(XmlGateway::SEPA_METHOD);
-
-    // Redirect Gateway
-    //$gateway->setPaymentMethod(RedirectGateway::GIROPAY_METHOD);
-    //$gateway->setPaymentMethod(RedirectGateway::IDEAL_METHOD);
-    //$gateway->setPaymentMethod(RedirectGateway::ONLINE_TRANSFER_METHOD);
-    //$gateway->setPaymentMethod(RedirectGateway::EPS_METHOD);
-    //$gateway->setPaymentMethod(RedirectGateway::PAYPAL_METHOD);
-    //$gateway->setPaymentMethod(RedirectGateway::CREDITCARD_METHOD);
-
 
     /*
      * 3.2.2. Create the request
@@ -152,7 +153,8 @@ if (!isset($_POST['tid'])) {
 
 ### Xml Gateway
 
-* 0 - Direct Debit SEPA
+* CREDITCARD
+* DIRECT_DEBIT_SEPA
 
 ### Redirect Gateway
 
