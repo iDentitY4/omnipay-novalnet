@@ -67,7 +67,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertEquals('JyEtHUjjbHNJwVztW6JrafIMHQvici', $request->getVendorAuthcode());
         $this->assertEquals(14, $request->getProductId());
         $this->assertEquals(30, $request->getTariffId());
-        $this->assertEquals(true, $request->getTestMode());
+        $this->assertEquals(false, $request->getTestMode());
         $this->assertEquals(RedirectGateway::CREDITCARD_METHOD, $request->getPaymentMethod());
     }
 }
