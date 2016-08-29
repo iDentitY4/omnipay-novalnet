@@ -25,8 +25,7 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             'tariffId',
             'amount',
             'currency',
-            'card',
-            'iban'
+            'card'
         );
 
         $this->validateCard(array(
@@ -75,6 +74,8 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
         );
 
         if ($this->getPaymentMethod() == XmlGateway::DIRECT_DEBIT_SEPA_METHOD) {
+            $this->validate('iban');
+            
             if ($this->getSepaDueDate()) {
                 $data['sepa_due_date'] = $this->getSepaDueDate();
             }
