@@ -49,13 +49,6 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
     {
         $postData = $this->httpRequest->request->all();
 
-        if (isset($postData['payment_error'])) {
-            throw new InvalidResponseException(
-                $postData['payment_error'] . ': ' .
-                $postData['status_text'] . '(' . $postData['status'] .')'
-            );
-        }
-
         // For encoded parameters, check the hash
         if ($this->shouldEncode()) {
             $validHash = RedirectEncode::checkHash((array) $postData, $this->getPaymentKey());
