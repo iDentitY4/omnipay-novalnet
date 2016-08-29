@@ -35,6 +35,7 @@ For common but obscure errors check out these [errors](errors.md). If you find m
 ## Example
 
 ```php
+use Omnipay\Novalnet\XmlGateway;
 use Omnipay\Novalnet\RedirectGateway;
 
 /*
@@ -43,6 +44,7 @@ use Omnipay\Novalnet\RedirectGateway;
 $gateway = new RedirectGateway();
 //$gateway = new XmlGateway(); // For XML
 
+$gateway->setTestMode(true);
 $gateway->setVendorId($vendorId);
 $gateway->setVendorAuthcode($vendorAuthcode);
 $gateway->setProductId($productId);
@@ -106,18 +108,16 @@ if (!isset($_POST['tid'])) {
     /*
      * 3.2.1. Choose the desired payment method
      */
-    // without redirect
-    # $gateway->setPaymentMethod(Gateway::SEPA_METHOD);
+    // XML Gateway
+    //$gateway->setPaymentMethod(XmlGateway::SEPA_METHOD);
 
-    // with redirect
-    # $gateway->setPaymentMethod(Gateway::GIROPAY_METHOD);
-    # $gateway->setPaymentMethod(Gateway::IDEAL_METHOD);
-    # $gateway->setPaymentMethod(Gateway::ONLINE_TRANSFER_METHOD);
-    # $gateway->setPaymentMethod(Gateway::EPS_METHOD);
-    # $gateway->setPaymentMethod(Gateway::PAYPAL_METHOD);
-    # $gateway->setPaymentMethod(Gateway::CREDITCARD_METHOD);
-
-    # $gateway->setPaymentMethod(Gateway::ALL_METHODS); // default when no payment method is given
+    // Redirect Gateway
+    //$gateway->setPaymentMethod(RedirectGateway::GIROPAY_METHOD);
+    //$gateway->setPaymentMethod(RedirectGateway::IDEAL_METHOD);
+    //$gateway->setPaymentMethod(RedirectGateway::ONLINE_TRANSFER_METHOD);
+    //$gateway->setPaymentMethod(RedirectGateway::EPS_METHOD);
+    //$gateway->setPaymentMethod(RedirectGateway::PAYPAL_METHOD);
+    //$gateway->setPaymentMethod(RedirectGateway::CREDITCARD_METHOD);
 
 
     /*
@@ -142,7 +142,7 @@ if (!isset($_POST['tid'])) {
         $response->redirect();
     } else {
         // payment failed: display message to customer
-        return "Error " .$response->getCode() . ': ' . $response->getMessage();
+        echo "Error " .$response->getCode() . ': ' . $response->getMessage();
     }
 }
 ```
