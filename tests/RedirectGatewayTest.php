@@ -58,7 +58,7 @@ class RedirectGatewayTest extends GatewayTestCase
     public function testPurchaseCreditCard()
     {
         /** @var \Omnipay\Novalnet\Message\RedirectPurchaseRequest $request */
-        $request = $this->gateway->purchase(['paymentMethod' => RedirectGateway::CREDITCARD_METHOD]);
+        $request = $this->gateway->purchase(array('paymentMethod' => RedirectGateway::CREDITCARD_METHOD));
 
         $this->assertInstanceOf('\Omnipay\Novalnet\Message\RedirectPurchaseRequest', $request);
 
