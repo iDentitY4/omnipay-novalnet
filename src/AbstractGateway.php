@@ -35,7 +35,7 @@ abstract class AbstractGateway extends CommonAbstractGateway
             'vendorAuthcode' => 'JyEtHUjjbHNJwVztW6JrafIMHQvici',
             'productId' => 14,
             'tariffId' => 30,
-            'testMode' => true,
+            'testMode' => false,
             'paymentMethod' => null,
         );
     }
