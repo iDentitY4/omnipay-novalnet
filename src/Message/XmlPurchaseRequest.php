@@ -2,6 +2,7 @@
 
 namespace Omnipay\Novalnet\Message;
 
+use Omnipay\Common\Exception\InvalidResponseException;
 use SimpleXMLElement;
 
 class XmlPurchaseRequest extends AbstractPurchaseRequest
@@ -16,17 +17,66 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
      */
     public function getData()
     {
-        $data = parent::getData();
+        $this->validate(
+            'vendorId',
+            'vendorAuthcode',
+            'productId',
+            'tariffId',
+            'amount',
+            'currency',
+            'card',
+            'iban'
+        );
 
-        // validate custom fields
-        $this->validate('iban');
+        $this->validateCard(array(
+            'billingFirstName',
+            'billingLastName',
+            'billingAddress1',
+            'billingPostcode',
+            'billingCity',
+            'billingCountry',
+            'email',
+            'phone',
+        ));
+
+        /** @var \Omnipay\Common\CreditCard $card */
+        $card = $this->getCard();
+        $data = array(
+            'vendor_id' => $this->getVendorId(),
+            'vendor_authcode' => $this->getVendorAuthcode(),
+            'product_id' => $this->getProductId(),
+            'tariff_id' => $this->getTariffId(),
+            'amount' => $this->getAmountInteger(),
+            'payment_type' => 'DIRECT_DEBIT_SEPA',
+            'order_no' => $this->getTransactionId(),
+            'currency' => $this->getCurrency(),
+            'lang' => $this->getLocale() ?: 'EN',
+            'test_mode' => $this->getTestMode(),
+
+            // customer details
+            'customer' => [
+                'remote_ip' => $this->httpRequest->getClientIp(),
+                'firstname' => $card->getBillingFirstName(),
+                'lastname' => $card->getBillingLastName(),
+                'street' => $card->getBillingAddress1(),
+                'search_in_street' => 1,
+                'zip' => $card->getBillingPostcode(),
+                'city' => $card->getBillingCity(),
+                'country' => $card->getBillingCountry(),
+                'country_code' => $card->getBillingCountry(),
+                'email' => $card->getEmail(),
+                'mobile' => $card->getBillingPhone(),
+                'tel' => $card->getBillingPhone(),
+                'fax' => $card->getFax(),
+                'birth_date' => $card->getBirthday(),
+            ],
+        );
+
+        if ($this->getSepaDueDate()) {
+            $data['sepa_due_date'] = $this->getSepaDueDate();
+        }
 
         $card = $this->getCard();
-        $data = $this->relocateCustomerData($data);
-
-        $data['payment_type'] = 'DIRECT_DEBIT_SEPA';
-        $data['sepa_due_date'] = $this->getSepaDueDate();
-
         $data['payment_details'] = array(
             'iban' => $this->getIban(),
             'bankaccount_holder' => $card->getBillingFirstName() . ' ' . $card->getBillingLastName(),
@@ -49,14 +99,15 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
         // send request
         $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $xml->asXML())->send();
 
+        if ($httpResponse->getContentType() !== 'text/xml') {
+            var_dump($httpResponse->getBody(true));
+            throw new InvalidResponseException('Invalid response');
+        }
+
         // return response
         return $this->response = new XmlPurchaseResponse($this, $httpResponse->xml()->transaction_response);
     }
 
-    public function shouldRedirect()
-    {
-        return false;
-    }
 
     private function arrayToXml($array, &$xml_user_info)
     {
@@ -73,40 +124,5 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
                 $xml_user_info->addChild("$key", htmlspecialchars("$value"));
             }
         }
-    }
-
-    private function relocateCustomerData($data)
-    {
-        $customerDataKeys = array(
-            'remote_ip',
-            'firstname',
-            'lastname',
-            'street',
-            'search_in_street',
-            'zip',
-            'city',
-            'country',
-            'country_code',
-            'email',
-            'mobile',
-            'tel',
-            'fax',
-            'birth_date',
-        );
-
-        $diffKeys = array(
-            'first_name' => 'firstname',
-            'last_name' => 'lastname',
-        );
-
-        array_walk($data, function ($value, $key) use (&$data, $customerDataKeys, $diffKeys) {
-            $key = array_key_exists($key, $diffKeys) ? $diffKeys[$key] : $key;
-            if (!in_array($key, $customerDataKeys)) {
-                return;
-            }
-            $data['customer'][$key] = $value;
-        });
-
-        return $data;
     }
 }

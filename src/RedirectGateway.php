@@ -3,6 +3,8 @@
 namespace Omnipay\Novalnet;
 
 
+use Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest;
+
 class RedirectGateway extends AbstractGateway
 {
     const CREDITCARD_METHOD = 6;
@@ -25,7 +27,7 @@ class RedirectGateway extends AbstractGateway
      *
      * @param array $parameters An array of options
      *
-     * @return \Omnipay\Novalnet\Message\PurchaseRequest
+     * @return \Omnipay\Novalnet\Message\RedirectPurchaseRequest
      */
     public function purchase(array $parameters = array())
     {
@@ -37,7 +39,7 @@ class RedirectGateway extends AbstractGateway
      *
      * @param array $parameters
      *
-     * @return CompletePurchaseRequest
+     * @return RedirectCompletePurchaseRequest
      */
     public function completePurchase(array $parameters = array())
     {

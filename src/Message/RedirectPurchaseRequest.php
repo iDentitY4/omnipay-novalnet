@@ -4,6 +4,7 @@ namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Novalnet\AbstractGateway;
+use Omnipay\Novalnet\Helpers\RedirectEncode;
 use Omnipay\Novalnet\RedirectGateway;
 use Omnipay\Novalnet\XmlGateway;
 
@@ -14,13 +15,120 @@ use Omnipay\Novalnet\XmlGateway;
  */
 class RedirectPurchaseRequest extends AbstractPurchaseRequest
 {
-
     public function getData()
     {
-        $data = parent::getData();
+        $this->validate(
+            'vendorId',
+            'vendorAuthcode',
+            'productId',
+            'tariffId',
+            'amount',
+            'currency',
+            'transactionId',
+            'card',
+            'paymentKey'
+        );
+
+        $this->validateCard(array(
+            'billingFirstName',
+            'billingLastName',
+            'billingAddress1',
+            'billingPostcode',
+            'billingCity',
+            'billingCountry',
+            'email',
+            'phone',
+        ));
+
+        /** @var \Omnipay\Common\CreditCard $card */
+        $card = $this->getCard();
+        $data = array(
+            'currency' => $this->getCurrency(),
+            'order_no' => $this->getTransactionId(),
+            'lang' => $this->getLocale() ?: 'EN',
+            'test_mode' => $this->getTestMode(),
+            'skip_cfm' => true,
+            'skip_suc' => true,
+
+            // customer details
+            'remote_ip' => $this->httpRequest->getClientIp(),
+            'first_name' => $card->getBillingFirstName(),
+            'last_name' => $card->getBillingLastName(),
+            'street' => $card->getBillingAddress1(),
+            'search_in_street' => 1,
+            'zip' => $card->getBillingPostcode(),
+            'city' => $card->getBillingCity(),
+            'country' => $card->getBillingCountry(),
+            'country_code' => $card->getBillingCountry(),
+            'email' => $card->getEmail(),
+            'mobile' => $card->getBillingPhone(),
+            'tel' => $card->getBillingPhone(),
+            'fax' => $card->getFax(),
+            'birth_date' => $card->getBirthday(),
+            'product' => $this->getProductId(),
+            'tariff' => $this->getTariffId(),
+            'amount' => $this->getAmountInteger(),
+            'uniqid' => $this->getTransactionId(),
+            'vendor' => $this->getVendorId(),
+            'auth_code' => $this->getVendorAuthcode(),
+        );
+
+
+        if ($this->getPaymentMethod()) {
+            $data['key'] = $this->getPaymentMethod();
+        }
+
+        // set description
+        if ($description = $this->getDescription()) {
+            $debitReason = str_split($description, 27);
+            $debitReason = array_splice($debitReason, 0, 5);
+
+            for ($i = 1; $i <= count($debitReason); $i++) {
+                $data['additional_info']['debit_reason_' . $i] = $debitReason[($i - 1)];
+            }
+        }
+
+
+        if ($this->getChosenOnly()) {
+            $data['chosen_only'] = true;
+        }
+
+        if ($this->shouldEncode()) {
+            $paymentKey = $this->getPaymentKey();
+
+            $dataToEncode = array(
+                'auth_code',
+                'product',
+                'tariff',
+                'amount',
+                'uniqid',
+                'test_mode',
+            );
+
+            foreach ($dataToEncode as $key) {
+                $data[$key] = RedirectEncode::encode($data[$key], $paymentKey);
+            }
+
+            $data['hash'] = RedirectEncode::hash1($data, $paymentKey);
+        }
+
+
+        if ($this->getReturnUrl() && $this->getCancelUrl()) {
+            $data['return_url'] = $this->getReturnUrl();
+            $data['return_method'] = $this->getReturnMethod() ?: 'POST';
+            $data['error_return_url'] = $this->getCancelUrl();
+            $data['error_return_method'] = $this->getCancelMethod() ?: 'POST';
+            $data['notify_url'] = $this->getNotifyUrl();
+        } elseif (!$this->getReturnUrl() && $this->getCancelUrl()) {
+            throw new InvalidRequestException('Missing return url as parameter');
+        } elseif ($this->getReturnUrl() && !$this->getCancelUrl()) {
+            throw new InvalidRequestException('Missing cancel url as parameter');
+        } else {
+            throw new InvalidRequestException('Missing return and cancel url as parameters');
+        }
+
 
         if (! $this->getChosenOnly() &&  $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD) {
-            $card = $this->getCard();
             $card->validate();
             $this->validateCard(array('cvv'));
 
@@ -29,11 +137,11 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             $data['cc_exp_year'] = $card->getExpiryYear();
             $data['cc_cvc2'] = $card->getCvv();
             $data['cc_holder'] = $card->getBillingFirstName() . ' ' . $card->getBillingLastName();
-
         }
 
         return $data;
     }
+
 
     /**
      * {@inheritdoc}
@@ -141,6 +249,6 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             return false;
         }
 
-        return false;
+        return true;
     }
 }

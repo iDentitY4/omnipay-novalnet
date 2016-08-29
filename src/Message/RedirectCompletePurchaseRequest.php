@@ -47,14 +47,15 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
     public function sendData($data)
     {
 
-        if ($this->httpRequest->get('payment_error')) {
+        if ($this->httpRequest->get('tid_status') !== 100) {
 
             throw new InvalidRequestException(
                 'Error: ' . $this->httpRequest->get('payment_error') .': ' .
                 $this->httpRequest->get('status') . ' - ' .
-                $this->httpRequest->get('status_text')
+                ($this->httpRequest->get('status_text') ?: $this->httpRequest->get('status_desc'))
             );
         }
+
         // build xml
         $xml = new SimpleXMLElement('<nnxml></nnxml>');
         $subElement = $xml->addChild('info_request');
