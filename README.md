@@ -48,8 +48,9 @@ $gateway->setVendorAuthcode($vendorAuthcode);
 $gateway->setProductId($productId);
 $gateway->setTariffId($tariffId);
 
-
-// Set payment method
+/*
+ * 1. Set payment method
+ */
 
 // For Redirect Gateway
 # $gateway->setPaymentMethod(RedirectGateway::GIROPAY_METHOD);
@@ -60,14 +61,14 @@ $gateway->setTariffId($tariffId);
 # $gateway->setPaymentMethod(RedirectGateway::CREDITCARD_METHOD);
 
 // To show the Novalnet screen with only the selected method:
-$gateway->setChosenOnly();
+//$gateway->setChosenOnly(true);
 
 // For XML Gateway
 # $gateway->setPaymentMethod(XmlGateway::CREDITCARD_METHOD);
 # $gateway->setPaymentMethod(XmlGateway::DIRECT_DEBIT_SEPA);
 
 /*
- * 2. Define the purchase parameters
+ * 3. Define the purchase parameters
  *
  * The easiest way to get a payment method working is starting
  * with zero parameters. Then start adding the parameters
@@ -101,40 +102,25 @@ $params = [
     ],
 ];
 
-
 /*
- * 3.1. Handle success,error and/or notify request
- */
-if (isset($_POST['tid'])) {
-    $response = $gateway->completePurchase($params)->send();
-    if ($response->isSuccessful()) {
-        echo 'Success [code: '. $response->getStatus() . ']';
-    } else {
-        echo 'Failed [code: '. $response->getStatus() . ']';
-    }
-    die();
-}
-
-
-/*
- * 3.2. Initialize purchase
+ * 4. Initialize purchase
  */
 if (!isset($_POST['tid'])) {
 
     /*
-     * 3.2.2. Create the request
+     * 4.1. Create the request
      */
     $request = $gateway->purchase($params);
 
 
     /*
-     * 3.2.3. Receive the response
+     * 4.2. Receive the response
      */
     $response = $request->send();
 
 
     /*
-     * 3.2.4. Handle the response appropriate
+     * 4.3. Handle the response appropriate
      */
     if ($response->isSuccessful()) {
         echo $response->getMessage();
@@ -145,6 +131,19 @@ if (!isset($_POST['tid'])) {
         // payment failed: display message to customer
         echo "Error " .$response->getCode() . ': ' . $response->getMessage();
     }
+}
+
+/*
+ * 5. Handle success, error and/or notify request for Redirect Gateway
+ */
+if (isset($_POST['tid'])) {
+    $response = $gateway->completePurchase($params)->send();
+    if ($response->isSuccessful()) {
+        echo 'Success [code: '. $response->getStatus() . ']';
+    } else {
+        echo 'Failed [code: '. $response->getStatus() . ']';
+    }
+    die();
 }
 ```
 
@@ -164,7 +163,6 @@ if (!isset($_POST['tid'])) {
 * 34 - PayPal
 * 50 - eps
 * 6 - Creditcard
-* 99 - All of the above (let the user choose)
 
 ### Payment form/page hosted on Novalnet Server
 When one of the above payment methods is set (excluding nr. 99), you can also set the `chosenOnly` property.
