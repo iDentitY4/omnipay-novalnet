@@ -228,6 +228,4 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
 
         return true;
     }
-
-
 }

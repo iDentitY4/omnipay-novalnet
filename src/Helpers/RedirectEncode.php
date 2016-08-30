@@ -95,7 +95,7 @@ class RedirectEncode
                 $h[$key] = $response[$key . '_secure'];
             } elseif (isset($response[$key])) {
                 $h[$key] = $response[$key];
-            } else{
+            } else {
                 return false;
             }
         }

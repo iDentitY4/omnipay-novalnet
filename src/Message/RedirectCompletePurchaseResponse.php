@@ -16,7 +16,7 @@ class RedirectCompletePurchaseResponse extends AbstractResponse
         // For encoded parameters, check the hash
         if ($this->isSuccessful() && $request->shouldVerifyHash()) {
             $validHash = RedirectEncode::checkHash((array) $data, $request->getPaymentKey());
-            if ( ! $validHash) {
+            if (! $validHash) {
                 $this->data->status_text = 'Invalid hash';
                 $this->data->status = -1;
             }

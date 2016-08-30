@@ -92,7 +92,9 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
 
     public function shouldVerifyHash()
     {
-        if ($this->getChosenOnly() || !$this->getPaymentMethod() || $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD) {
+        if ($this->getChosenOnly() || !$this->getPaymentMethod() ||
+            $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD
+        ) {
             return false;
         }
 
