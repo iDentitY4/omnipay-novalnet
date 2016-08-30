@@ -15,10 +15,10 @@ class RedirectEncode
     {
         $data = trim($data);
         if ($data == '') {
-            return 'Error: no data';
+            throw new \InvalidArgumentException('Encode error: no data to encode');
         }
         if (!function_exists('base64_encode') or !function_exists('pack') or !function_exists('crc32')) {
-            return 'Error: func n/a';
+            throw new \Exception('Encode error: func n/a (base64_encode, pack or crc32)');
         }
         try {
             $crc = sprintf('%u', crc32($data));# %u is a must for ccrc32 returns a signed value
@@ -26,7 +26,7 @@ class RedirectEncode
             $data = bin2hex($data . $password);
             $data = strrev(base64_encode($data));
         } catch (\Exception $e) {
-            echo('Error: ' . $e);
+            throw new \Exception('Encode error: Cannot encode \'' . $data .'\': ' . $e->getMessage(), 0, $e);
         }
 
         return $data;
@@ -35,10 +35,10 @@ class RedirectEncode
     public static function hash1($h, $key) #$h contains encoded data
     {
         if (!$h) {
-            return 'Error: no data';
+            throw new \InvalidArgumentException('Hash Error: no data to hash');
         }
         if (!function_exists('md5')) {
-            return 'Error: func n/a';
+            throw new \InvalidArgumentException('Hash error: md5 func n/a');
         }
 
         return md5(
