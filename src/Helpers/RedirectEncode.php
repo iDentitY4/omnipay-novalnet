@@ -80,16 +80,25 @@ class RedirectEncode
      */
     public static function checkHash(array $response, $password)
     {
-        if (!$response || !isset($response['auth_code']) || !isset($response['product'])) {
-            return false;
-        }
+        $params = array(
+            'auth_code',
+            'product',
+            'tariff',
+            'amount',
+            'test_mode',
+            'uniqid'
+        );
 
-        $h['auth_code'] = $response['auth_code'];
-        $h['product'] = $response['product'];
-        $h['tariff'] = $response['tariff'];
-        $h['amount'] = $response['amount'];
-        $h['test_mode'] = $response['test_mode'];
-        $h['uniqid'] = $response['uniqid'];
+        $h = array();
+        foreach ($params as $key) {
+            if (isset($response[$key . '_secure'])) {
+                $h[$key] = $response[$key . '_secure'];
+            } elseif (isset($response[$key])) {
+                $h[$key] = $response[$key];
+            } else{
+                return false;
+            }
+        }
 
         if ($response['hash2'] != md5(
             $h['auth_code'] . $h['product'] . $h['tariff'] . $h['amount'] .

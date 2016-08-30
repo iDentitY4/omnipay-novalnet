@@ -5,6 +5,7 @@ namespace Omnipay\Novalnet\Message;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Novalnet\Helpers\RedirectEncode;
+use Omnipay\Novalnet\RedirectGateway;
 use SimpleXMLElement;
 
 /**
@@ -47,18 +48,9 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
      */
     public function sendData($data)
     {
-        $postData = $this->httpRequest->request->all();
+        return new RedirectCompletePurchaseResponse($this, (object) $this->httpRequest->request->all());
 
-        // For encoded parameters, check the hash
-        if ($this->shouldEncode()) {
-            $validHash = RedirectEncode::checkHash((array) $postData, $this->getPaymentKey());
-            if (!$validHash) {
-                throw new InvalidResponseException('Invalid hash - ' . (isset($postData['status_text']) ? $postData['status_text'] : ''));
-            }
-
-            return new RedirectCompletePurchaseResponse($this, (object) $postData);
-        }
-
+        /*
         // build xml
         $xml = new SimpleXMLElement('<nnxml></nnxml>');
         $subElement = $xml->addChild('info_request');
@@ -68,7 +60,7 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
         $httpResponse = $this->httpClient->post($this->endpoint, null, $xml->asXML())->send();
 
         // return response
-        return $this->response = new RedirectCompletePurchaseResponse($this, $httpResponse->xml());
+        return $this->response = new RedirectCompletePurchaseResponse($this, $httpResponse->xml());*/
     }
 
     public function getStatusText()
@@ -96,5 +88,14 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
                 $xml_user_info->addChild("$key", htmlspecialchars("$value"));
             }
         }
+    }
+
+    public function shouldVerifyHash()
+    {
+        if ($this->getChosenOnly() || !$this->getPaymentMethod() || $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD) {
+            return false;
+        }
+
+        return true;
     }
 }

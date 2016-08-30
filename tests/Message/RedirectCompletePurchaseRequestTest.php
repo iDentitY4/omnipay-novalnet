@@ -6,6 +6,7 @@ use Mockery as m;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Novalnet\Message\CompletePurchaseRequest;
 use Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest;
+use Omnipay\Novalnet\RedirectGateway;
 use Omnipay\Tests\TestCase;
 
 class RedirectCompletePurchaseRequestTest extends TestCase
@@ -21,22 +22,15 @@ class RedirectCompletePurchaseRequestTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $request = $this->getHttpRequest();
-        $request->query->set('tid', '13380800018726060');
-        $request->query->set('order_no', '12345678');
 
-        $arguments = array($this->getHttpClient(), $request);
-        $this->request = m::mock('Omnipay\Novalnet\Message\RedirectCompletePurchaseRequest[getEndpoint]', $arguments);
-        $this->request = $this->request->setVendorId(4);
-        $this->request = $this->request->setVendorAuthcode('JyEtHUjjbHNJwVztW6JrafIMHQvici');
-        $this->request = $this->request->setProductId('14');
-        $this->request = $this->request->setTestMode(true);
-        $this->request = $this->request->setTransactionId('12345678');
     }
 
-    public function testSendSuccess()
+    public function testSendChosenOnlySuccess()
     {
-        $this->setMockHttpResponse('CompletePurchaseSuccess.txt');
+        $request = $this->fillRequestData('ReturnChosenOnlySuccess');
+
+        $this->request = new RedirectCompletePurchaseRequest($this->getHttpClient(), $request);
+        $this->initializeRequest(RedirectGateway::IDEAL_METHOD, true);
 
         $response = $this->request->send();
 
@@ -44,14 +38,76 @@ class RedirectCompletePurchaseRequestTest extends TestCase
         $this->assertFalse($response->isRedirect());
     }
 
-    public function testSendFailure()
+    public function testSendChosenOnlyFailure()
     {
-        $this->setMockHttpResponse('CompletePurchaseFailure.txt');
+        $request = $this->fillRequestData('ReturnChosenOnlyFailed');
+
+        $this->request = new RedirectCompletePurchaseRequest($this->getHttpClient(), $request);
+        $this->initializeRequest(RedirectGateway::IDEAL_METHOD, true);
 
         $response = $this->request->send();
 
         $this->assertFalse($response->isSuccessful());
-        $this->assertEquals(434002, $response->getCode());
+        $this->assertEquals(509006, $response->getCode());
+        $this->assertEquals('Card type not accepted', $response->getMessage());
+    }
+
+
+    public function testSendEncodedSuccess()
+    {
+        $request = $this->fillRequestData('ReturnEncodedSuccess');
+
+        $this->request = new RedirectCompletePurchaseRequest($this->getHttpClient(), $request);
+        $this->initializeRequest(RedirectGateway::IDEAL_METHOD, false);
+
+        $response = $this->request->send();
+
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+    }
+
+    public function testSendEncodedFailure()
+    {
+        $request = $this->fillRequestData('ReturnEncodedError');
+
+        $this->request = new RedirectCompletePurchaseRequest($this->getHttpClient(), $request);
+        $this->initializeRequest(RedirectGateway::IDEAL_METHOD, false);
+
+        $response = $this->request->send();
+
+        $this->assertFalse($response->isSuccessful());
+        $this->assertEquals(300055, $response->getCode());
+        $this->assertEquals('internal parameter transmitted incorrectly', $response->getMessage());
+    }
+
+    public function testSendEncodedSuccessInvalidHash()
+    {
+        $request = $this->fillRequestData('ReturnEncodedSuccess');
+        $request->request->set('hash2', 'abc');
+
+        $this->request = new RedirectCompletePurchaseRequest($this->getHttpClient(), $request);
+        $this->initializeRequest(RedirectGateway::IDEAL_METHOD, false);
+
+        $response = $this->request->send();
+
+        $this->assertFalse($response->isSuccessful());
+        $this->assertEquals(-1, $response->getCode());
+        $this->assertEquals('Invalid hash', $response->getMessage());
+    }
+
+    public function testSendEncodedFailedInvalidHash()
+    {
+        $request = $this->fillRequestData('ReturnEncodedError');
+        $request->request->set('hash2', 'abc');
+
+        $this->request = new RedirectCompletePurchaseRequest($this->getHttpClient(), $request);
+        $this->initializeRequest(RedirectGateway::IDEAL_METHOD, false);
+
+        $response = $this->request->send();
+
+        $this->assertFalse($response->isSuccessful());
+        $this->assertEquals(300055, $response->getCode());
+        $this->assertEquals('internal parameter transmitted incorrectly', $response->getMessage());
     }
 
     /**
@@ -59,7 +115,7 @@ class RedirectCompletePurchaseRequestTest extends TestCase
      *
      * @return $this
      */
-    protected function initializeRequest($paymentMethod = null)
+    protected function initializeRequest($paymentMethod = null, $chosenOnly = false)
     {
         $options = array(
             'vendorId' => 4,
@@ -68,11 +124,11 @@ class RedirectCompletePurchaseRequestTest extends TestCase
             'tariffId' => 30,
             'testMode' => 1,
             'paymentMethod' => $paymentMethod,
+            'chosenOnly' => $chosenOnly,
 
             'amount' => 10.21,
             'currency' => 'EUR',
             'transactionId' => '12345678',
-            'iban' => 'DE24300209002411761956',
 
             'notifyUrl' => 'https://example.com/notify',
             'returnUrl' => 'https://example.com/success',
@@ -83,16 +139,12 @@ class RedirectCompletePurchaseRequestTest extends TestCase
             'card' => array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
-                'address1' => 'Streetname 1', // note the house number in the
+                'address1' => 'Streetname 1',
                 'postcode' => '1234AB',
                 'city' => 'Amsterdam',
                 'country' => 'NL',
                 'email' => 'info@example.com',
                 'phone' => '+31612345678',
-                'number' => '4200 0000 0000 0000',
-                'expiryMonth' => date('m', strtotime('+1 month')),
-                'expiryYear' => date('Y', strtotime('+1 month')),
-                'cvv' => 123,
             ),
         );
 
@@ -102,6 +154,40 @@ class RedirectCompletePurchaseRequestTest extends TestCase
     protected function getRequest()
     {
         return new RedirectCompletePurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+    }
+
+    public function testChosenOnlySucces()
+    {
+
+
+    }
+
+    protected function fillRequestData($filename)
+    {
+        $data = require __DIR__ . '/../Mock/' . $filename . '.php';
+
+        $request = $this->getHttpRequest();
+
+        foreach ($data as $key => $value) {
+            $request->request->set($key, $value);
+        }
+
+        return $request;
+    }
+
+    protected function getValidPostDataChosenOnly()
+    {
+
+    }
+
+    public function getValidPostDataEncoded()
+    {
+
+    }
+
+    public function getInvalidPostData()
+    {
+
     }
 
 

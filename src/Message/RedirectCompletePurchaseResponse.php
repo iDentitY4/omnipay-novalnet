@@ -9,6 +9,20 @@ use Omnipay\Novalnet\Helpers\RedirectEncode;
 class RedirectCompletePurchaseResponse extends AbstractResponse
 {
 
+    public function __construct(RequestInterface $request, $data)
+    {
+        parent::__construct($request, $data);
+
+        // For encoded parameters, check the hash
+        if ($this->isSuccessful() && $request->shouldVerifyHash()) {
+            $validHash = RedirectEncode::checkHash((array) $data, $request->getPaymentKey());
+            if ( ! $validHash) {
+                $this->data->status_text = 'Invalid hash';
+                $this->data->status = -1;
+            }
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -24,6 +38,10 @@ class RedirectCompletePurchaseResponse extends AbstractResponse
     {
         if (isset($this->data->status_text)) {
             return (string) $this->data->status_text;
+        }
+
+        if (isset($this->data->status_desc)) {
+            return (string) $this->data->status_desc;
         }
 
         return null;

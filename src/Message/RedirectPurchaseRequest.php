@@ -221,13 +221,13 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
 
     public function shouldEncode()
     {
-        if ($this->getChosenOnly() ||
-            !$this->getPaymentMethod() ||
-            $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD
-        ) {
+        // Only direct CreditCard does not need to be encrypted
+        if (!$this->getChosenOnly() && $this->getPaymentMethod() == RedirectGateway::CREDITCARD_METHOD) {
             return false;
         }
 
         return true;
     }
+
+
 }
