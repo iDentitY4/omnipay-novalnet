@@ -69,6 +69,7 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
                 'tel' => $card->getBillingPhone(),
                 'fax' => $card->getFax(),
                 'birth_date' => $card->getBirthday(),
+                'company' => $card->getBillingCompany(),
             ),
         );
 

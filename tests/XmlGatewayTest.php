@@ -37,12 +37,17 @@ class XmlGatewayTest extends GatewayTestCase
         parent::setUp();
 
         $this->gateway = new XmlGateway($this->getHttpClient(), $this->getHttpRequest());
+        $this->gateway->initialize(array(
+            'vendorId' => 4,
+            'vendorAuthcode' => 'JyEtHUjjbHNJwVztW6JrafIMHQvici',
+            'productId' => 14,
+            'tariffId' => 30,
+            'testMode' => true,
+        ));
     }
 
     public function testPurchase()
     {
-        $this->gateway = new XmlGateway($this->getHttpClient(), $this->getHttpRequest());
-
         /** @var \Omnipay\Novalnet\Message\XmlPurchaseRequest $request */
         $request = $this->gateway->purchase();
 
@@ -53,7 +58,7 @@ class XmlGatewayTest extends GatewayTestCase
         $this->assertEquals('JyEtHUjjbHNJwVztW6JrafIMHQvici', $request->getVendorAuthcode());
         $this->assertEquals(14, $request->getProductId());
         $this->assertEquals(30, $request->getTariffId());
-        $this->assertEquals(false, $request->getTestMode());
+        $this->assertTrue($request->getTestMode());
         $this->assertNull($request->getPaymentMethod());
     }
 }

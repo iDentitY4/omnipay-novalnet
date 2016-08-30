@@ -6,8 +6,6 @@ use Omnipay\Common\AbstractGateway as CommonAbstractGateway;
 
 abstract class AbstractGateway extends CommonAbstractGateway
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -22,10 +20,10 @@ abstract class AbstractGateway extends CommonAbstractGateway
     public function getDefaultParameters()
     {
         return array(
-            'vendorId' => 4,
-            'vendorAuthcode' => 'JyEtHUjjbHNJwVztW6JrafIMHQvici',
-            'productId' => 14,
-            'tariffId' => 30,
+            'vendorId' => null,
+            'vendorAuthcode' => null,
+            'productId' => null,
+            'tariffId' => null,
             'testMode' => false,
             'paymentMethod' => null,
         );

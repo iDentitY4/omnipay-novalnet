@@ -37,6 +37,13 @@ class RedirectGatewayTest extends GatewayTestCase
         parent::setUp();
 
         $this->gateway = new RedirectGateway($this->getHttpClient(), $this->getHttpRequest());
+        $this->gateway->initialize(array(
+            'vendorId' => 4,
+            'vendorAuthcode' => 'JyEtHUjjbHNJwVztW6JrafIMHQvici',
+            'productId' => 14,
+            'tariffId' => 30,
+            'testMode' => true,
+        ));
     }
 
     public function testPurchase()
@@ -67,7 +74,7 @@ class RedirectGatewayTest extends GatewayTestCase
         $this->assertEquals('JyEtHUjjbHNJwVztW6JrafIMHQvici', $request->getVendorAuthcode());
         $this->assertEquals(14, $request->getProductId());
         $this->assertEquals(30, $request->getTariffId());
-        $this->assertEquals(false, $request->getTestMode());
+        $this->assertTrue($request->getTestMode());
         $this->assertEquals(RedirectGateway::CREDITCARD_METHOD, $request->getPaymentMethod());
     }
 }

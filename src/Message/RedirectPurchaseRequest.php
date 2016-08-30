@@ -72,6 +72,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'country' => $card->getBillingCountry(),
             'country_code' => $card->getBillingCountry(),
             'gender' => $card->getGender() ?: 'u',
+            'company' => $card->getBillingCompany(),
             'lang' => $this->getLocale() ?: 'EN',
             'remote_ip' => $this->httpRequest->getClientIp(),
             'tel' => $card->getBillingPhone(),
