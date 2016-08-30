@@ -2,6 +2,7 @@
 
 namespace Omnipay\Novalnet\Message;
 
+use Omnipay\Common\CreditCard;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Novalnet\AbstractGateway;
 use Omnipay\Novalnet\Helpers\RedirectEncode;
@@ -25,30 +26,33 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'amount',
             'currency',
             'transactionId',
-            'card',
             'paymentKey',
             'returnUrl',
             'cancelUrl',
             'notifyUrl'
         );
 
-        $this->validateCard(array(
-            'billingFirstName',
-            'billingLastName',
-            'billingAddress1',
-            'billingPostcode',
-            'billingCity',
-            'billingCountry',
-            'email',
-            'phone',
-        ));
+        if (!$this->getChosenOnly() && $this->getPaymentMethod()) {
+            $this->validate('card');
+            $this->validateCard(array(
+                'billingFirstName',
+                'billingLastName',
+                'billingAddress1',
+                'billingPostcode',
+                'billingCity',
+                'billingCountry',
+                'email',
+            ));
+        }
+
+        $card = $this->getCard() ?: new CreditCard();
 
         if (! $this->getUniqId()) {
             $this->setUniqId(uniqid($this->getTransactionId()));
         }
 
         /** @var \Omnipay\Common\CreditCard $card */
-        $card = $this->getCard();
+
         $data = array(
             'utf8' => 1,
             'use_utf8' => 1,
@@ -95,18 +99,15 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'system_version' => '1.0.0',
         );
 
-
-
         // set description
         if ($description = $this->getDescription()) {
             $debitReason = str_split($description, 27);
             $debitReason = array_splice($debitReason, 0, 5);
 
             for ($i = 1; $i <= count($debitReason); $i++) {
-                $data['additional_info']['debit_reason_' . $i] = $debitReason[($i - 1)];
+                $data['debit_reason_' . $i] = $debitReason[($i - 1)];
             }
         }
-
 
         if ($this->getChosenOnly()) {
             $data['chosen_only'] = true;

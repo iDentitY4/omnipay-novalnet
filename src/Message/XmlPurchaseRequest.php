@@ -73,6 +73,16 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             ),
         );
 
+        // set description
+        if ($description = $this->getDescription()) {
+            $debitReason = str_split($description, 27);
+            $debitReason = array_splice($debitReason, 0, 5);
+
+            for ($i = 1; $i <= count($debitReason); $i++) {
+                $data['additional_info']['debit_reason_' . $i] = $debitReason[($i - 1)];
+            }
+        }
+
         if ($this->getPaymentMethod() == XmlGateway::DIRECT_DEBIT_SEPA_METHOD) {
             $this->validate('iban');
 
