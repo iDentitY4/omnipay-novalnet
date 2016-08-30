@@ -52,7 +52,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
         $data = array(
             'utf8' => 1,
             'use_utf8' => 1,
-            'test_mode' => $this->getTestMode(),
+            'test_mode' => $this->getTestMode() ? 1 : 0,
             'vendor' => $this->getVendorId(),
             'product' => $this->getProductId(),
             'key' => $this->getPaymentMethod(),
@@ -73,7 +73,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'country_code' => $card->getBillingCountry(),
             'gender' => $card->getGender() ?: 'u',
             'company' => $card->getBillingCompany(),
-            'lang' => $this->getLocale() ?: 'EN',
+            'lang' => strtoupper($this->getLocale()),
             'remote_ip' => $this->httpRequest->getClientIp(),
             'tel' => $card->getBillingPhone(),
             'fax' => $card->getFax(),

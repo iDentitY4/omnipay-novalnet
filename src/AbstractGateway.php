@@ -25,6 +25,7 @@ abstract class AbstractGateway extends CommonAbstractGateway
             'productId' => null,
             'tariffId' => null,
             'testMode' => false,
+            'locale' => 'EN',
             'paymentMethod' => null,
         );
     }
@@ -107,5 +108,15 @@ abstract class AbstractGateway extends CommonAbstractGateway
     public function setChosenOnly($value = true)
     {
         return $this->setParameter('chosenOnly', $value);
+    }
+
+    public function getLocale()
+    {
+        return $this->getParameter('locale');
+    }
+
+    public function setLocale($value)
+    {
+        return $this->setParameter('locale', $value);
     }
 }

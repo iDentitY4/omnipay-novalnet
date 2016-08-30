@@ -50,8 +50,8 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             'payment_type' => $this->getPaymentMethod(),
             'order_no' => $this->getTransactionId(),
             'currency' => $this->getCurrency(),
-            'lang' => $this->getLocale() ?: 'EN',
-            'test_mode' => $this->getTestMode(),
+            'lang' => strtoupper($this->getLocale()),
+            'test_mode' => $this->getTestMode() ? 1 : 0,
 
             // customer details
             'customer' => array(

@@ -165,7 +165,6 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
         return $this->setParameter('cancelMethod', $value);
     }
 
-
     protected function validateCard($parameters = array())
     {
         $card = $this->getCard();
@@ -175,12 +174,5 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
                 throw new InvalidRequestException("The $parameter parameter is required");
             }
         }
-    }
-
-    public function getData()
-    {
-
-
-        return $data;
     }
 }
