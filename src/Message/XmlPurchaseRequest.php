@@ -99,16 +99,26 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
         }
 
         if ($this->getPaymentMethod() == XmlGateway::CREDITCARD_METHOD) {
-            $card->validate();
-            $this->validateCard(array('cvv'));
 
-            $data['payment_details'] = array(
-                'cc_no' => $card->getNumber(),
-                'cc_exp_month' => $card->getExpiryMonth(),
-                'cc_exp_year' => $card->getExpiryYear(),
-                'cc_cvc2' =>  $card->getCvv(),
-                'cc_holder' => $card->getBillingName()
-            );
+            if($this->getPanHash() && $this->getUniqueId())
+            {
+                $this->validate('pan_hash', 'unique_id');
+                $data['pan_hash'] = $this->getPanHash();
+                $data['unique_id'] = $this->getUniqueId();
+            }
+            else
+            {
+                $card->validate();
+                $this->validateCard(array('cvv'));
+
+                $data['payment_details'] = array(
+                    'cc_no' => $card->getNumber(),
+                    'cc_exp_month' => $card->getExpiryMonth(),
+                    'cc_exp_year' => $card->getExpiryYear(),
+                    'cc_cvc2' => $card->getCvv(),
+                    'cc_holder' => $card->getBillingName()
+                );
+            }
         }
         
         return $data;
@@ -132,6 +142,26 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
     public function setBankaccountHolder($value)
     {
         return $this->setParameter('bankaccountHolder', $value);
+    }
+
+    public function getPanHash()
+    {
+        return $this->getParameter('pan_hash');
+    }
+
+    public function setPanHash($value)
+    {
+        return $this->setParameter('pan_hash', $value);
+    }
+
+    public function getUniqueId()
+    {
+        return $this->getParameter('unique_id');
+    }
+
+    public function setUniqueId($value)
+    {
+        return $this->setParameter('unique_id', $value);
     }
 
     /**
