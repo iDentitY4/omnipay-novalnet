@@ -1,5 +1,5 @@
 {
-  "name": "fruitcake/omnipay-novalnet",
+  "name": "identity4/omnipay-novalnet",
   "description": "Novalnet gateway for the Omnipay payment processing library",
   "keywords": [
     "gateway",
@@ -16,6 +16,10 @@
     {
       "name": "Fruitcake",
       "homepage": "https://fruitcake.nl"
+    },
+    {
+      "name": "iDentitY",
+      "homepage": "https://sksystems.de"
     }
   ],
   "autoload": {
