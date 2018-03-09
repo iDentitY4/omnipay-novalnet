@@ -167,42 +167,42 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
 
     public function getOnHold()
     {
-        return $this->getParameter('on_hold');
+        return $this->getParameter('onHold');
     }
 
     public function setOnHold($value)
     {
-        return $this->setParameter('on_hold', $value);
+        return $this->setParameter('onHold', $value);
     }
 
     public function getTariffPeriod()
     {
-        return $this->getParameter('tariff_period');
+        return $this->getParameter('tariffPeriod');
     }
 
     public function setTariffPeriod($value)
     {
-        return $this->setParameter('tariff_period', $value);
+        return $this->setParameter('tariffPeriod', $value);
     }
 
     public function getTariffPeriod2()
     {
-        return $this->getParameter('tariff_period2');
+        return $this->getParameter('tariffPeriod2');
     }
 
     public function setTariffPeriod2($value)
     {
-        return $this->setParameter('tariff_period2', $value);
+        return $this->setParameter('tariffPeriod2', $value);
     }
 
     public function getTariffPeriod2Amount()
     {
-        return $this->getParameter('tariff_period2_amount');
+        return $this->getParameter('tariffPeriod2Amount');
     }
 
     public function setTariffPeriod2Amount($value)
     {
-        return $this->setParameter('tariff_period2_amount', $value);
+        return $this->setParameter('tariffPeriod2Amount', $value);
     }
 
     protected function validateCard($parameters = array())

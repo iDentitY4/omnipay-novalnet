@@ -86,13 +86,13 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
 
         if($tariff_period = $this->getTariffPeriod())
         {
-            $this->validate('tariff_period');
+            $this->validate('tariffPeriod');
             $data['tariff_period'] = $tariff_period;
         }
 
         if($tariff_period2 = $this->getTariffPeriod2())
         {
-            $this->validate('tariff_period2', 'tariff_period2_amount');
+            $this->validate('tariffPeriod2', 'tariffPeriod2Amount');
             $data['tariff_period2'] = $tariff_period2;
             $data['tariff_period2_amount'] = $this->getTariffPeriod2Amount();
         }
