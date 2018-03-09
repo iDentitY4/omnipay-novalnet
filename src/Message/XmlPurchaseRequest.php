@@ -52,6 +52,7 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             'currency' => $this->getCurrency(),
             'lang' => strtoupper($this->getLocale()),
             'test_mode' => $this->getTestMode() ? 1 : 0,
+            'on_hold' => $this->getOnHold() ? 1 : 0,
 
             // customer details
             'customer' => array(
@@ -81,6 +82,19 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
             for ($i = 1; $i <= count($debitReason); $i++) {
                 $data['additional_info']['debit_reason_' . $i] = $debitReason[($i - 1)];
             }
+        }
+
+        if($tariff_period = $this->getTariffPeriod())
+        {
+            $this->validate('tariff_period');
+            $data['tariff_period'] = $tariff_period;
+        }
+
+        if($tariff_period2 = $this->getTariffPeriod2())
+        {
+            $this->validate('tariff_period2', 'tariff_period2_amount');
+            $data['tariff_period2'] = $tariff_period2;
+            $data['tariff_period2_amount'] = $this->getTariffPeriod2Amount();
         }
 
         if ($this->getPaymentMethod() == XmlGateway::DIRECT_DEBIT_SEPA_METHOD) {

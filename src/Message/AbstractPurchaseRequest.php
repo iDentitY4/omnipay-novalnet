@@ -165,6 +165,46 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
         return $this->setParameter('cancelMethod', $value);
     }
 
+    public function getOnHold()
+    {
+        return $this->getParameter('on_hold');
+    }
+
+    public function setOnHold($value)
+    {
+        return $this->setParameter('on_hold', $value);
+    }
+
+    public function getTariffPeriod()
+    {
+        return $this->getParameter('tariff_period');
+    }
+
+    public function setTariffPeriod($value)
+    {
+        return $this->setParameter('tariff_period', $value);
+    }
+
+    public function getTariffPeriod2()
+    {
+        return $this->getParameter('tariff_period2');
+    }
+
+    public function setTariffPeriod2($value)
+    {
+        return $this->setParameter('tariff_period2', $value);
+    }
+
+    public function getTariffPeriod2Amount()
+    {
+        return $this->getParameter('tariff_period2_amount');
+    }
+
+    public function setTariffPeriod2Amount($value)
+    {
+        return $this->setParameter('tariff_period2_amount', $value);
+    }
+
     protected function validateCard($parameters = array())
     {
         $card = $this->getCard();
