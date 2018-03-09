@@ -55,7 +55,7 @@ abstract class AbstractResponse extends BaseAbstractResponse
      */
     public function getMessage()
     {
-        return (string) $this->data->status_message;
+        return (string) $this->data->status_desc;
     }
 
     /**
@@ -64,5 +64,20 @@ abstract class AbstractResponse extends BaseAbstractResponse
     public function getCode()
     {
         return isset($this->data->status) ? (int) $this->data->status : null;
+    }
+
+    public function getCurrency()
+    {
+        return (string) $this->data->currency;
+    }
+
+    public function getPaidUntil()
+    {
+        return isset($this->data->paid_until) ? $this->data->paid_until : null;
+    }
+
+    public function getInternalStatusDetails()
+    {
+        return isset($this->data->internal_status_details) ? $this->data->internal_status_details : null;
     }
 }
