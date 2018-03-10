@@ -109,13 +109,4 @@ class RedirectCompletePurchaseResponse extends AbstractResponse
 
         return null;
     }
-
-    public function getPaymentMethod()
-    {
-        if (isset($this->data->payment_type)) {
-            return (string) $this->data->payment_type;
-        }
-
-        return null;
-    }
 }
