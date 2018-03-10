@@ -59,7 +59,7 @@ class RedirectCompletePurchaseResponse extends AbstractResponse
     public function getAmount()
     {
         if (isset($this->data->amount)) {
-            return (int) $this->data->amount;
+            return (int) RedirectEncode::decode($this->data->amount, $this->request->getPaymentKey());
         }
 
         return null;
@@ -77,7 +77,7 @@ class RedirectCompletePurchaseResponse extends AbstractResponse
     public function getTestMode()
     {
         if (isset($this->data->test_mode)) {
-            return (boolean) $this->data->test_mode;
+            return (boolean) RedirectEncode::decode($this->data->test_mode, $this->request->getPaymentKey());
         }
 
         return false;

@@ -32,6 +32,27 @@ class RedirectEncode
         return $data;
     }
 
+    public static function decode($data, $password)
+    {
+        $data = trim($data);
+        if ($data == '') {
+            throw new \InvalidArgumentException('Encode error: no data to decode');
+        }
+        if (!function_exists('base64_decode') or !function_exists('pack') or !function_exists('crc32')) {
+            throw new \Exception('Encode error: func n/a (base64_decode, pack or crc32)');
+        }
+        try {
+            $data = base64_decode(strrev($data));
+            $data = hex2bin($data);
+            $data = substr($data, -strlen($password));
+            $data = explode("|", $data)[1];
+        } catch (\Exception $e) {
+            throw new \Exception('Encode error: Cannot encode \'' . $data .'\': ' . $e->getMessage(), 0, $e);
+        }
+
+        return $data;
+    }
+
     public static function hash1($h, $key) #$h contains encoded data
     {
         if (!$h) {
