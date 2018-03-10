@@ -66,6 +66,11 @@ abstract class AbstractResponse extends BaseAbstractResponse
         return isset($this->data->status) ? (int) $this->data->status : null;
     }
 
+    public function getAmount()
+    {
+        return isset($this->data->amount) ? (int) $this->data->amount : null;
+    }
+
     public function getCurrency()
     {
         return (string) $this->data->currency;
