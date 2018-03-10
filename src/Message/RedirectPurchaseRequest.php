@@ -63,6 +63,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'auth_code' => $this->getVendorAuthcode(),
             'currency' => $this->getCurrency(),
             'amount' => $this->getAmountInteger(),
+            'on_hold' => $this->getOnHold() ? 1 : 0,
 
             // customer details
             'first_name' => $card->getBillingFirstName(),
