@@ -28,7 +28,7 @@ class CapturePurchaseRequest extends AbstractPurchaseRequest
             'tariffId',
             'amount',
             'transactionReference',
-            'status'
+            'requestType'
         );
 
         $data = array(
