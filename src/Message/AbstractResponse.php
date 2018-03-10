@@ -90,4 +90,9 @@ abstract class AbstractResponse extends BaseAbstractResponse
     {
         return isset($this->data->internal_status_details) ? $this->data->internal_status_details : null;
     }
+
+    public function getOnHold()
+    {
+        return isset($this->data->on_hold) ? $this->data->on_hold : null;
+    }
 }
