@@ -44,7 +44,7 @@ class RedirectEncode
         try {
             $data = base64_decode(strrev($data));
             $data = hex2bin($data);
-            $data = substr($data, -strlen($password));
+            $data = substr($data, 0, (-1 * strlen($password)));
             $data = explode("|", $data)[1];
         } catch (\Exception $e) {
             throw new \Exception('Encode error: Cannot encode \'' . $data .'\': ' . $e->getMessage(), 0, $e);
