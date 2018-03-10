@@ -47,6 +47,11 @@ abstract class AbstractResponse extends BaseAbstractResponse
      */
     public function getTransactionId()
     {
+        return isset($this->data->order_no) ? $this->data->order_no : null;
+    }
+
+    public function getTransactionReference()
+    {
         return isset($this->data->tid) ? $this->data->tid : null;
     }
 

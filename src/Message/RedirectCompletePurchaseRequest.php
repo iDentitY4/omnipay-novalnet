@@ -65,7 +65,7 @@ class RedirectCompletePurchaseRequest extends RedirectPurchaseRequest
 
     public function getStatusText()
     {
-        return $this->httpRequest->get('status_text');
+        return $this->httpRequest->get('status_desc');
     }
 
     public function getStatusCode()

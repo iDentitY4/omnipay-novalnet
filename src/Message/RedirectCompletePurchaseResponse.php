@@ -92,19 +92,19 @@ class RedirectCompletePurchaseResponse extends AbstractResponse
         return null;
     }
 
-    public function getTransactionReference()
+    public function getTransactionId()
     {
-        if (isset($this->data->tid)) {
-            return (string) $this->data->tid;
+        if (isset($this->data->order_no)) {
+            return (string) $this->data->order_no;
         }
 
         return null;
     }
 
-    public function getTransactionId()
+    public function getTransactionReference()
     {
-        if (isset($this->data->order_no)) {
-            return (string) $this->data->order_no;
+        if (isset($this->data->tid)) {
+            return (string) $this->data->tid;
         }
 
         return null;
