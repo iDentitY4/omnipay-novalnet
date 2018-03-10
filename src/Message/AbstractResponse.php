@@ -73,7 +73,7 @@ abstract class AbstractResponse extends BaseAbstractResponse
 
     public function getCurrency()
     {
-        return (string) $this->data->currency;
+        return isset($this->data->currency) ? (string) $this->data->currency : null;
     }
 
     public function getPaidUntil()
