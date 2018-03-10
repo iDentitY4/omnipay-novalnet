@@ -28,6 +28,16 @@ class CaptureGateway extends AbstractGateway
         return $this->createRequest('\Omnipay\Novalnet\Message\CapturePurchaseRequest', $parameters);
     }
 
+    public function getRequestType()
+    {
+        return $this->getParameter('requestType');
+    }
+
+    public function setRequestType($value)
+    {
+        return $this->setParameter('requestType', $value);
+    }
+
     public static function methodFromString($methodAsString)
     {
         switch($methodAsString)

@@ -47,16 +47,6 @@ class CapturePurchaseRequest extends AbstractPurchaseRequest
         return $data;
     }
 
-    public function getRequestType()
-    {
-        return $this->parameters->get('requestType');
-    }
-
-    public function setRequestType($value)
-    {
-        $this->parameters->set('requestType', $value);
-    }
-
     /**
      * {@inheritdoc}
      */
