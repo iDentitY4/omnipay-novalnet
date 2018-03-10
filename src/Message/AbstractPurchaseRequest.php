@@ -3,6 +3,7 @@
 namespace Omnipay\Novalnet\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Exception\RuntimeException;
 use Omnipay\Novalnet\AbstractGateway;
 use Omnipay\Novalnet\RedirectGateway;
 use Omnipay\Novalnet\XmlGateway;
@@ -144,6 +145,20 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
         return $this->getParameter('paymentMethod');
     }
 
+    public function getPaymentMethodAsString()
+    {
+        $method = $this->getPaymentMethod();
+        if(is_numeric($method))
+        {
+            switch($method) {
+                case 6: return 'CREDITCARD';
+                case 37: return 'DIRECT_DEBIT_SEPA';
+                case 34: return 'PayPal';
+                default: throw new RuntimeException('Payment key '.$method.' is unknown');
+            }
+        }
+        return $method;
+    }
 
     public function getReturnMethod()
     {

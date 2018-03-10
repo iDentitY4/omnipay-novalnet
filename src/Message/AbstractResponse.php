@@ -95,9 +95,4 @@ abstract class AbstractResponse extends BaseAbstractResponse
     {
         return isset($this->data->on_hold) ? $this->data->on_hold : null;
     }
-
-    public function getPaymentMethod()
-    {
-        return isset($this->data->payment_type) ? (string) $this->data->payment_type : null;
-    }
 }
