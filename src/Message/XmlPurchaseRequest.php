@@ -116,7 +116,7 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
 
             if($this->getPanHash() && $this->getUniqueId())
             {
-                $this->validate('pan_hash', 'unique_id');
+                $this->validate('panHash', 'uniqueId');
                 $data['pan_hash'] = $this->getPanHash();
                 $data['unique_id'] = $this->getUniqueId();
             }
@@ -160,22 +160,22 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
 
     public function getPanHash()
     {
-        return $this->getParameter('pan_hash');
+        return $this->getParameter('panHash');
     }
 
     public function setPanHash($value)
     {
-        return $this->setParameter('pan_hash', $value);
+        return $this->setParameter('panHash', $value);
     }
 
     public function getUniqueId()
     {
-        return $this->getParameter('unique_id');
+        return $this->getParameter('uniqueId');
     }
 
     public function setUniqueId($value)
     {
-        return $this->setParameter('unique_id', $value);
+        return $this->setParameter('uniqueId', $value);
     }
 
     /**

@@ -28,8 +28,7 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'transactionId',
             'paymentKey',
             'returnUrl',
-            'cancelUrl',
-            'notifyUrl'
+            'cancelUrl'
         );
 
         if (!$this->getChosenOnly() && $this->getPaymentMethod()) {
@@ -88,7 +87,6 @@ class RedirectPurchaseRequest extends AbstractPurchaseRequest
             'return_method' => $this->getReturnMethod() ?: 'POST',
             'error_return_url' => $this->getCancelUrl(),
             'error_return_method' => $this->getCancelMethod() ?: 'POST',
-            'notify_url' => $this->getNotifyUrl(),
 
             'order_no' => $this->getTransactionId(),
             'skip_cfm' => true,
