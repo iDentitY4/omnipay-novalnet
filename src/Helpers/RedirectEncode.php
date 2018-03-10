@@ -11,22 +11,37 @@ namespace Omnipay\Novalnet\Helpers;
 class RedirectEncode
 {
 
-    public static function encode($data, $password)
+    public static function encode($data, $password, $unique_id)
     {
         $data = trim($data);
         if ($data == '') {
             throw new \InvalidArgumentException('Encode error: no data to encode');
         }
-        if (!function_exists('base64_encode') or !function_exists('pack') or !function_exists('crc32')) {
-            throw new \Exception('Encode error: func n/a (base64_encode, pack or crc32)');
+        if (!function_exists('base64_encode') or !function_exists('openssl_encrypt')) {
+            throw new \Exception('Encode error: func n/a (base64_encode or openssl_encrypt)');
         }
         try {
-            $crc = sprintf('%u', crc32($data));# %u is a must for ccrc32 returns a signed value
-            $data = $crc . "|" . $data;
-            $data = bin2hex($data . $password);
-            $data = strrev(base64_encode($data));
+            $data = htmlentities(base64_encode(openssl_encrypt($data, "aes-256-cbc", $password, true, $unique_id)));
         } catch (\Exception $e) {
             throw new \Exception('Encode error: Cannot encode \'' . $data .'\': ' . $e->getMessage(), 0, $e);
+        }
+
+        return $data;
+    }
+
+    public static function decode($data, $password, $unique_id)
+    {
+        $data = trim($data);
+        if ($data == '') {
+            throw new \InvalidArgumentException('Encode error: no data to decode');
+        }
+        if (!function_exists('base64_decode') or !function_exists('openssl_encrypt')) {
+            throw new \Exception('Encode error: func n/a (base64_decode or openssl_decrypt)');
+        }
+        try {
+            $data = openssl_decrypt(base64_decode(html_entity_decode($data)), "aes-256-cbc", $password, true, $unique_id);
+        } catch (\Exception $e) {
+            throw new \Exception('Encode error: Cannot decode \'' . $data .'\': ' . $e->getMessage(), 0, $e);
         }
 
         return $data;
@@ -50,27 +65,6 @@ class RedirectEncode
             $h['uniqid'] .
             strrev($key)
         );
-    }
-
-    public static function encodeParams($auth_code, $product_id, $tariff_id, $amount, $test_mode, $uniqid, $password)
-    {
-        $auth_code = self::encode($auth_code, $password);
-        $product_id = self::encode($product_id, $password);
-        $tariff_id = self::encode($tariff_id, $password);
-        $amount = self::encode($amount, $password);
-        $test_mode = self::encode($test_mode, $password);
-        $uniqid = self::encode($uniqid, $password);
-
-        $hash = self::hash1(array(
-            'auth_code' => $auth_code,
-            'product' => $product_id,
-            'tariff' => $tariff_id,
-            'amount' => $amount,
-            'test_mode' => $test_mode,
-            'uniqid' => $uniqid,
-        ), $password);
-
-        return array($auth_code, $product_id, $tariff_id, $amount, $test_mode, $uniqid, $hash);
     }
 
     /**
