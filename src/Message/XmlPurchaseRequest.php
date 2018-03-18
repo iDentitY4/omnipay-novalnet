@@ -94,7 +94,7 @@ class XmlPurchaseRequest extends AbstractPurchaseRequest
         {
             $this->validate('tariffPeriod2', 'tariffPeriod2Amount');
             $data['tariff_period2'] = $tariff_period2;
-            $data['tariff_period2_amount'] = $this->getTariffPeriod2Amount();
+            $data['tariff_period2_amount'] = $this->getTariffPeriod2AmountInteger();
         }
 
         if ($this->getPaymentMethod() == XmlGateway::DIRECT_DEBIT_SEPA_METHOD) {

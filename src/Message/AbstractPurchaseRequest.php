@@ -210,9 +210,9 @@ abstract class AbstractPurchaseRequest extends AbstractRequest
         return $this->setParameter('tariffPeriod2', $value);
     }
 
-    public function getTariffPeriod2Amount()
+    public function getTariffPeriod2AmountInteger()
     {
-        return $this->getParameter('tariffPeriod2Amount');
+        return (int) round($this->getParameter('tariffPeriod2Amount') * 10);
     }
 
     public function setTariffPeriod2Amount($value)
