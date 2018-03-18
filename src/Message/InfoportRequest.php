@@ -33,24 +33,34 @@ class InfoportRequest extends AbstractRequest
         );
 
         if($this->getRequestType() === InfoportGateway::SUBSCRIPTION_STOP) {
-            $this->validate('cancellationTid', 'cancellationReason');
+            $this->validate('cancellationReason');
 
-            $data['tid'] = $this->getCancellationTid();
+            $data['tid'] = $this->getTransactionReference();
             $data['reason'] = $this->getCancellationReason();
         } elseif($this->getRequestType() === InfoportGateway::SUBSCRIPTION_UPDATE) {
-            $this->validate('updateField', 'updateTid');
+            $this->validate('updateField');
 
             $data['update_flag'] = $this->getUpdateField();
-            $data['subs_tid'] = $this->getUpdateTid();
+            $data['subs_tid'] = $this->getTransactionReference();
         } elseif($this->getRequestType() === InfoportGateway::SUBSCRIPTION_PAUSE) {
-            $this->validate('pausePeriod', 'pauseTimeUnit', 'pauseTid');
+            $this->validate('pausePeriod', 'pauseTimeUnit');
 
             $data['pause_period'] = $this->getPausePeriod();
             $data['pause_time_unit'] = $this->getPauseTimeUnit();
-            $data['tid'] = $this->getPauseTid();
+            $data['tid'] = $this->getTransactionReference();
         }
         
         return $data;
+    }
+
+    public function getTransactionReference()
+    {
+        return $this->getParameter('tid');
+    }
+
+    public function setTransactionReference($value)
+    {
+        return $this->setParameter('tid', $value);
     }
 
     public function getRequestType()
@@ -61,16 +71,6 @@ class InfoportRequest extends AbstractRequest
     public function setRequestType($value)
     {
         return $this->setParameter('requestType', $value);
-    }
-
-    public function getCancellationTid()
-    {
-        return $this->getParameter('cancellationTid');
-    }
-
-    public function setCancellationTid($value)
-    {
-        return $this->setParameter('cancellationTid', $value);
     }
 
     public function getCancellationReason()
@@ -93,16 +93,6 @@ class InfoportRequest extends AbstractRequest
         return $this->setParameter('updateField', $value);
     }
 
-    public function getUpdateTid()
-    {
-        return $this->getParameter('updateTid');
-    }
-
-    public function setUpdateTid($value)
-    {
-        return $this->setParameter('updateTid', $value);
-    }
-
     public function getPausePeriod()
     {
         return $this->getParameter('pausePeriod');
@@ -121,16 +111,6 @@ class InfoportRequest extends AbstractRequest
     public function setPauseTimeUnit($value)
     {
         return $this->setParameter('pauseTimeUnit', $value);
-    }
-
-    public function getPauseTid()
-    {
-        return $this->getParameter('pauseTid');
-    }
-
-    public function setPauseTid($value)
-    {
-        return $this->setParameter('pauseTid', $value);
     }
 
     /**
