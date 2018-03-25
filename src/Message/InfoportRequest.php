@@ -127,7 +127,7 @@ class InfoportRequest extends AbstractRequest
         $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $xml->asXML())->send();
 
         // return response
-        return $this->response = new InfoportResponse($this, $httpResponse->xml()->transaction_response);
+        return $this->response = new InfoportResponse($this, $httpResponse->xml());
     }
 
 

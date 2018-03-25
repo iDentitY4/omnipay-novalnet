@@ -1,6 +1,4 @@
-<?php
-
-namespace Omnipay\Novalnet\Message;
+<?php namespace Omnipay\Novalnet\Message;
 
 class InfoportResponse extends AbstractResponse
 {
