@@ -22,14 +22,15 @@ class InfoportRequest extends AbstractRequest
         $this->validate(
             'vendorId',
             'vendorAuthcode',
-            'requestType'
+            'requestType',
+            'serverIp'
         );
 
         $data = array(
             'vendor_id' => $this->getVendorId(),
             'vendor_authcode' => $this->getVendorAuthcode(),
             'request_type' => $this->getRequestType(),
-            'remote_ip' => $this->httpRequest->getClientIp(),
+            'remote_ip' => $this->getServerIp(),
         );
 
         if($this->getRequestType() === InfoportGateway::SUBSCRIPTION_STOP) {
@@ -71,6 +72,16 @@ class InfoportRequest extends AbstractRequest
     public function setRequestType($value)
     {
         return $this->setParameter('requestType', $value);
+    }
+
+    public function getServerIp()
+    {
+        return $this->getParameter('serverIp');
+    }
+
+    public function setServerIp($value)
+    {
+        return $this->setParameter('serverIp', $value);
     }
 
     public function getCancellationReason()
